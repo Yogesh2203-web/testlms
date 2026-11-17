@@ -1,0 +1,595 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Our Courses | Institute LMS</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        .page-hero {
+            background: #080808;
+            color: white;
+            padding: 85px 0;
+            text-align: center;
+        }
+
+        .page-hero span {
+            color: #999;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .page-hero h1 {
+            font-size: clamp(38px, 6vw, 60px);
+            letter-spacing: -3px;
+            margin-top: 15px;
+        }
+
+        .page-hero p {
+            color: #aaa;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .course-search {
+            max-width: 550px;
+            margin: 35px auto 0;
+        }
+
+        .course-search input {
+            width: 100%;
+            padding: 17px 20px;
+            border: 1px solid #444;
+            border-radius: 10px;
+            background: #181818;
+            color: white;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .course-search input:focus {
+            border-color: white;
+        }
+
+        .course-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .filter-btn {
+            padding: 11px 20px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #080808;
+            color: white;
+            border-color: #080808;
+        }
+
+        .all-courses {
+            padding: 75px 0 100px;
+        }
+
+        .course-grid-full {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .course-card-full {
+            padding: 28px;
+            border: 1px solid #e8e8e8;
+            border-radius: 16px;
+            transition: 0.3s;
+        }
+
+        .course-card-full:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.07);
+        }
+
+        .course-card-full .course-icon {
+            margin-bottom: 22px;
+        }
+
+        .course-card-full h3 {
+            font-size: 21px;
+            margin-top: 10px;
+        }
+
+        .course-card-full p {
+            font-size: 12px;
+            color: #777;
+            line-height: 1.8;
+            margin: 12px 0 22px;
+        }
+
+        .course-details {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .course-card-full .btn {
+            width: 100%;
+            padding: 12px;
+        }
+
+        .no-results {
+            display: none;
+            text-align: center;
+            color: #777;
+            padding: 40px 0;
+        }
+
+        @media(max-width: 850px) {
+            .course-grid-full {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 550px) {
+            .course-grid-full {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/premium-public.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="container nav-content">
+
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">I</span>
+                <span>Institute<span class="logo-light">LMS</span></span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="../index.html">Home</a>
+                <a href="courses.html" class="active">Courses</a>
+                <a href="about.html">About Us</a>
+                <a href="career.html">Career</a>
+                <a href="social-media.html">Social Media</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <a href="login.html" class="btn btn-dark login-btn">
+                Login ↗
+            </a>
+
+        </div>
+    </header>
+
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+
+        <div class="container">
+
+            <span>LEARN SOMETHING NEW</span>
+
+            <h1>Explore Our Courses</h1>
+
+            <p>
+                Discover professional courses designed to build your
+                technical skills and career.
+            </p>
+
+            <div class="course-search">
+                <input
+                    type="text"
+                    id="courseSearch"
+                    placeholder="Search courses..."
+                >
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- COURSES -->
+    <section class="all-courses">
+
+        <div class="container">
+
+            <div class="course-filters">
+
+                <button class="filter-btn active" data-filter="all">
+                    All Courses
+                </button>
+
+                <button class="filter-btn" data-filter="cad">
+                    CAD Design
+                </button>
+
+                <button class="filter-btn" data-filter="engineering">
+                    Engineering
+                </button>
+
+                <button class="filter-btn" data-filter="computer">
+                    Computer
+                </button>
+
+            </div>
+
+
+            <div class="course-grid-full" id="courseGrid">
+
+
+                <!-- AUTOCAD -->
+                <article class="course-card-full" data-category="cad">
+
+                    <div class="course-icon">⌘</div>
+
+                    <span class="course-category">CAD DESIGN</span>
+
+                    <h3>AutoCAD</h3>
+
+                    <p>
+                        Learn 2D drafting, technical drawings,
+                        dimensions and professional design.
+                    </p>
+
+                    <div class="course-details">
+                        <span>Practical Training</span>
+                        <span>Beginner Friendly</span>
+                    </div>
+
+                    <a href="../admission/enquiry.html?course=AutoCAD"
+                       class="btn btn-dark">
+                        Enquire Now →
+                    </a>
+
+                </article>
+
+
+                <!-- CREO -->
+                <article class="course-card-full" data-category="cad">
+
+                    <div class="course-icon">◈</div>
+
+                    <span class="course-category">3D DESIGN</span>
+
+                    <h3>Creo</h3>
+
+                    <p>
+                        Understand parametric modeling, 3D parts
+                        and mechanical product design.
+                    </p>
+
+                    <div class="course-details">
+                        <span>Practical Training</span>
+                        <span>Intermediate</span>
+                    </div>
+
+                    <a href="../admission/enquiry.html?course=Creo"
+                       class="btn btn-dark">
+                        Enquire Now →
+                    </a>
+
+                </article>
+
+
+                <!-- CATIA -->
+                <article class="course-card-full" data-category="engineering">
+
+                    <div class="course-icon">◇</div>
+
+                    <span class="course-category">ENGINEERING</span>
+
+                    <h3>CATIA</h3>
+
+                    <p>
+                        Learn advanced 3D modeling, surface design
+                        and engineering applications.
+                    </p>
+
+                    <div class="course-details">
+                        <span>Practical Training</span>
+                        <span>Advanced</span>
+                    </div>
+
+                    <a href="../admission/enquiry.html?course=CATIA"
+                       class="btn btn-dark">
+                        Enquire Now →
+                    </a>
+
+                </article>
+
+
+                <!-- SOLIDWORKS -->
+                <article class="course-card-full" data-category="engineering">
+
+                    <div class="course-icon">▣</div>
+
+                    <span class="course-category">ENGINEERING</span>
+
+                    <h3>SolidWorks</h3>
+
+                    <p>
+                        Develop 3D mechanical design, assemblies
+                        and product visualization skills.
+                    </p>
+
+                    <div class="course-details">
+                        <span>Practical Training</span>
+                        <span>Intermediate</span>
+                    </div>
+
+                    <a href="../admission/enquiry.html?course=SolidWorks"
+                       class="btn btn-dark">
+                        Enquire Now →
+                    </a>
+
+                </article>
+
+
+                <!-- REVIT -->
+                <article class="course-card-full" data-category="cad">
+
+                    <div class="course-icon">⌂</div>
+
+                    <span class="course-category">CAD DESIGN</span>
+
+                    <h3>Revit</h3>
+
+                    <p>
+                        Learn architectural modeling, building
+                        information modeling and documentation.
+                    </p>
+
+                    <div class="course-details">
+                        <span>Practical Training</span>
+                        <span>Beginner Friendly</span>
+                    </div>
+
+                    <a href="../admission/enquiry.html?course=Revit"
+                       class="btn btn-dark">
+                        Enquire Now →
+                    </a>
+
+                </article>
+
+
+                <!-- PYTHON -->
+                <article class="course-card-full" data-category="computer">
+
+                    <div class="course-icon">⌘</div>
+
+                    <span class="course-category">COMPUTER</span>
+
+                    <h3>Python Programming</h3>
+
+                    <p>
+                        Learn programming fundamentals, logic,
+                        functions and real-world Python applications.
+                    </p>
+
+                    <div class="course-details">
+                        <span>Practical Training</span>
+                        <span>Beginner Friendly</span>
+                    </div>
+
+                    <a href="../admission/enquiry.html?course=Python"
+                       class="btn btn-dark">
+                        Enquire Now →
+                    </a>
+
+                </article>
+
+
+                <!-- WEB DEVELOPMENT -->
+                <article class="course-card-full" data-category="computer">
+
+                    <div class="course-icon">⌘</div>
+
+                    <span class="course-category">COMPUTER</span>
+
+                    <h3>Web Development</h3>
+
+                    <p>
+                        Learn HTML, CSS and JavaScript to create
+                        responsive websites and web applications.
+                    </p>
+
+                    <div class="course-details">
+                        <span>Practical Training</span>
+                        <span>Beginner Friendly</span>
+                    </div>
+
+                    <a href="../admission/enquiry.html?course=Web Development"
+                       class="btn btn-dark">
+                        Enquire Now →
+                    </a>
+
+                </article>
+
+
+                <!-- JAVA -->
+                <article class="course-card-full" data-category="computer">
+
+                    <div class="course-icon">⌘</div>
+
+                    <span class="course-category">COMPUTER</span>
+
+                    <h3>Java Programming</h3>
+
+                    <p>
+                        Learn object-oriented programming,
+                        Java fundamentals and application development.
+                    </p>
+
+                    <div class="course-details">
+                        <span>Practical Training</span>
+                        <span>Intermediate</span>
+                    </div>
+
+                    <a href="../admission/enquiry.html?course=Java"
+                       class="btn btn-dark">
+                        Enquire Now →
+                    </a>
+
+                </article>
+
+
+            </div>
+
+            <div class="no-results" id="noResults">
+                No courses found. Try another search.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CTA -->
+    <section class="cta-section">
+
+        <div class="container cta-content">
+
+            <div>
+                <span class="section-label">START YOUR JOURNEY</span>
+
+                <h2>Find the Right Course for You.</h2>
+
+                <p>
+                    Contact our team to get course details and admission guidance.
+                </p>
+            </div>
+
+            <a href="../admission/enquiry.html" class="btn btn-light">
+                Apply Now →
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="container footer-content">
+
+            <div>
+                <a href="../index.html" class="logo footer-logo">
+                    <span class="logo-icon">I</span>
+                    <span>Institute<span class="logo-light">LMS</span></span>
+                </a>
+
+                <p>
+                    Learn new skills. Build confidence.<br>
+                    Create your future.
+                </p>
+            </div>
+
+            <div class="footer-links">
+                <a href="../index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="login.html">Login</a>
+            </div>
+
+        </div>
+
+        <div class="container footer-bottom">
+            <p>© 2026 Institute LMS. All rights reserved.</p>
+            <p>Learn • Grow • Succeed</p>
+        </div>
+
+    </footer>
+
+
+    <!-- COURSE SEARCH AND FILTER -->
+    <script>
+
+        const searchInput = document.getElementById("courseSearch");
+        const filterButtons = document.querySelectorAll(".filter-btn");
+        const courseCards = document.querySelectorAll(".course-card-full");
+        const noResults = document.getElementById("noResults");
+
+        let selectedCategory = "all";
+
+        function filterCourses() {
+
+            const searchValue = searchInput.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            courseCards.forEach(card => {
+
+                const category = card.dataset.category;
+                const text = card.textContent.toLowerCase();
+
+                const matchesCategory =
+                    selectedCategory === "all" ||
+                    category === selectedCategory;
+
+                const matchesSearch = text.includes(searchValue);
+
+                if (matchesCategory && matchesSearch) {
+                    card.style.display = "block";
+                    visibleCount++;
+                } else {
+                    card.style.display = "none";
+                }
+
+            });
+
+            noResults.style.display =
+                visibleCount === 0 ? "block" : "none";
+
+        }
+
+        searchInput.addEventListener("input", filterCourses);
+
+        filterButtons.forEach(button => {
+
+            button.addEventListener("click", () => {
+
+                filterButtons.forEach(btn =>
+                    btn.classList.remove("active")
+                );
+
+                button.classList.add("active");
+
+                selectedCategory = button.dataset.filter;
+
+                filterCourses();
+
+            });
+
+        });
+
+    </script>
+
+</body>
+</html>

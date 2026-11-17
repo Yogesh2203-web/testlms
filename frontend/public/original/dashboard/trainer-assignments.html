@@ -1,0 +1,891 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignments | Institute LMS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #111;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            background: #111;
+            color: white;
+            padding: 25px 15px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 19px;
+            font-weight: bold;
+            padding: 0 12px 30px;
+        }
+
+        .brand small {
+            display: block;
+            color: #999;
+            font-size: 11px;
+            margin-top: 7px;
+            font-weight: normal;
+        }
+
+        .nav-label {
+            color: #888;
+            font-size: 10px;
+            padding: 15px 12px 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 13px 12px;
+            color: #bbb;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: white;
+            color: #111;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 75px;
+            background: white;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+
+        .topbar h2 {
+            font-size: 19px;
+        }
+
+        .content {
+            max-width: 1400px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            font-size: 26px;
+            margin-bottom: 7px;
+        }
+
+        .heading p {
+            color: #777;
+            font-size: 13px;
+        }
+
+        button {
+            border: none;
+            border-radius: 5px;
+            padding: 11px 15px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .primary {
+            background: #111;
+            color: white;
+        }
+
+        .secondary {
+            background: #eee;
+            color: #111;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .stat-card p {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h2 {
+            font-size: 25px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #eee;
+            padding: 22px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        input, select, textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 13px;
+            background: white;
+        }
+
+        .filters input {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 750px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 11px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 12px;
+        }
+
+        th {
+            color: #777;
+            background: #fafafa;
+        }
+
+        .badge {
+            padding: 5px 8px;
+            background: #eee;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,.65);
+            padding: 15px;
+            z-index: 20;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 9px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header button {
+            background: #eee;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+        }
+
+        .form-group textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .notice {
+            background: #eee;
+            padding: 13px;
+            border-radius: 6px;
+            color: #555;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+
+        .mobile-menu {
+            display: none;
+            background: none;
+            font-size: 22px;
+        }
+
+        @media(max-width: 950px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 700px) {
+            .sidebar {
+                display: none;
+                position: fixed;
+                z-index: 10;
+                height: 100vh;
+                overflow-y: auto;
+            }
+
+            .sidebar.open {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .content {
+                padding: 17px;
+            }
+
+            .heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media(max-width: 450px) {
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 9px;
+            }
+
+            .stat-card {
+                padding: 14px;
+            }
+
+            .stat-card h2 {
+                font-size: 21px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            INSTITUTE LMS
+            <small>TRAINER PANEL</small>
+        </div>
+
+        <div class="nav-label">Main Menu</div>
+
+        <a href="trainer.html" class="nav-link">Dashboard</a>
+        <a href="trainer-students.html" class="nav-link">My Students</a>
+        <a href="trainer-attendance.html" class="nav-link">Attendance</a>
+        <a href="trainer-assignments.html" class="nav-link active">Assignments</a>
+        <a href="trainer-exams.html" class="nav-link">Exams & Results</a>
+
+        <div class="nav-label">Account</div>
+
+        <a href="trainer-settings.html" class="nav-link">My Profile</a>
+        <a href="../pages/login.html" class="nav-link">Logout</a>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div style="display:flex;align-items:center;gap:15px">
+                <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+                <h2>Assignments</h2>
+            </div>
+
+            <span style="font-size:13px">Trainer Panel</span>
+        </header>
+
+        <div class="content">
+
+            <section class="heading">
+                <div>
+                    <h1>Assignment Management</h1>
+                    <p>Create assignments and review student submissions.</p>
+                </div>
+
+                <button class="primary" onclick="openCreateModal()">
+                    + Create Assignment
+                </button>
+            </section>
+
+            <!-- Statistics -->
+
+            <section class="stats">
+
+                <div class="stat-card">
+                    <p>Total Assignments</p>
+                    <h2 id="totalAssignments">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Published</p>
+                    <h2 id="publishedCount">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Submitted</p>
+                    <h2 id="submittedCount">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Pending Submissions</p>
+                    <h2 id="pendingCount">0</h2>
+                </div>
+
+            </section>
+
+            <!-- Assignment Table -->
+
+            <section class="panel">
+
+                <div class="filters">
+
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Search assignments..."
+                    >
+
+                    <select id="courseFilter">
+                        <option value="">All Courses</option>
+                        <option>AutoCAD</option>
+                        <option>Creo</option>
+                        <option>Python</option>
+                        <option>Web Development</option>
+                    </select>
+
+                    <select id="statusFilter">
+                        <option value="">All Status</option>
+                        <option>Published</option>
+                        <option>Draft</option>
+                    </select>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Assignment</th>
+                                <th>Course</th>
+                                <th>Batch</th>
+                                <th>Due Date</th>
+                                <th>Submissions</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="assignmentTable"></tbody>
+                    </table>
+
+                    <p id="emptyMessage"
+                       style="display:none;text-align:center;padding:25px;color:#777;font-size:13px">
+                        No assignments found.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <div class="notice">
+                <strong>Demo mode:</strong> Assignments and submission counts
+                are sample records stored in browser memory. Real assignments
+                require authenticated student accounts, secure file uploads,
+                backend validation and database storage.
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- Create Assignment Modal -->
+
+<div class="modal" id="createModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h3>Create Assignment</h3>
+            <button onclick="closeCreateModal()">✕</button>
+        </div>
+
+        <form id="assignmentForm">
+
+            <div class="form-group">
+                <label>Assignment Title</label>
+                <input type="text" id="title"
+                    placeholder="Enter assignment title" required>
+            </div>
+
+            <div class="form-group">
+                <label>Course</label>
+                <select id="course" required>
+                    <option value="">Select Course</option>
+                    <option>AutoCAD</option>
+                    <option>Creo</option>
+                    <option>Python</option>
+                    <option>Web Development</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Batch</label>
+                <select id="batch" required>
+                    <option value="">Select Batch</option>
+                    <option>AUT-01</option>
+                    <option>CRE-02</option>
+                    <option>PY-01</option>
+                    <option>WEB-01</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Due Date</label>
+                <input type="date" id="dueDate" required>
+            </div>
+
+            <div class="form-group">
+                <label>Maximum Marks</label>
+                <input type="number" id="marks"
+                    min="1" max="1000" value="100" required>
+            </div>
+
+            <div class="form-group">
+                <label>Description / Instructions</label>
+                <textarea id="description"
+                    placeholder="Write assignment instructions..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Assignment Status</label>
+                <select id="assignmentStatus">
+                    <option>Published</option>
+                    <option>Draft</option>
+                </select>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="secondary"
+                    onclick="closeCreateModal()">Cancel</button>
+
+                <button type="submit" class="primary">
+                    Save Assignment
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- Assignment Details Modal -->
+
+<div class="modal" id="detailsModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h3>Assignment Details</h3>
+            <button onclick="closeDetailsModal()">✕</button>
+        </div>
+
+        <div id="assignmentDetails"></div>
+
+    </div>
+
+</div>
+
+<script>
+    let assignments = [
+        {
+            id: 1,
+            title: "2D Drawing Practice",
+            course: "AutoCAD",
+            batch: "AUT-01",
+            dueDate: "2026-11-05",
+            marks: 100,
+            description: "Create a 2D technical drawing using AutoCAD.",
+            status: "Published",
+            submitted: 18,
+            totalStudents: 25
+        },
+        {
+            id: 2,
+            title: "Part Modeling Exercise",
+            course: "Creo",
+            batch: "CRE-02",
+            dueDate: "2026-11-08",
+            marks: 50,
+            description: "Create a basic 3D part model.",
+            status: "Published",
+            submitted: 12,
+            totalStudents: 20
+        },
+        {
+            id: 3,
+            title: "Python Programming Basics",
+            course: "Python",
+            batch: "PY-01",
+            dueDate: "2026-11-10",
+            marks: 100,
+            description: "Complete the basic Python programming exercises.",
+            status: "Published",
+            submitted: 0,
+            totalStudents: 18
+        },
+        {
+            id: 4,
+            title: "HTML and CSS Project",
+            course: "Web Development",
+            batch: "WEB-01",
+            dueDate: "2026-11-12",
+            marks: 100,
+            description: "Build a responsive website using HTML and CSS.",
+            status: "Draft",
+            submitted: 0,
+            totalStudents: 22
+        }
+    ];
+
+    let nextId = 5;
+
+    const table = document.getElementById("assignmentTable");
+
+    function renderAssignments() {
+        const search = document.getElementById("searchInput")
+            .value.toLowerCase().trim();
+
+        const course = document.getElementById("courseFilter").value;
+        const status = document.getElementById("statusFilter").value;
+
+        const filtered = assignments.filter(item => {
+            const matchesSearch =
+                item.title.toLowerCase().includes(search) ||
+                item.course.toLowerCase().includes(search) ||
+                item.batch.toLowerCase().includes(search);
+
+            return matchesSearch &&
+                (!course || item.course === course) &&
+                (!status || item.status === status);
+        });
+
+        table.innerHTML = "";
+
+        filtered.forEach(item => {
+            const row = document.createElement("tr");
+
+            const values = [
+                item.title,
+                item.course,
+                item.batch,
+                item.dueDate,
+                item.submitted + " / " + item.totalStudents,
+                item.status
+            ];
+
+            values.forEach(value => {
+                const cell = document.createElement("td");
+
+                if (value === "Published" || value === "Draft") {
+                    const badge = document.createElement("span");
+                    badge.className = "badge";
+                    badge.textContent = value;
+                    cell.appendChild(badge);
+                } else {
+                    cell.textContent = value;
+                }
+
+                row.appendChild(cell);
+            });
+
+            const actionCell = document.createElement("td");
+
+            const viewButton = document.createElement("button");
+            viewButton.className = "secondary";
+            viewButton.textContent = "View";
+            viewButton.style.marginRight = "5px";
+            viewButton.addEventListener("click", () => {
+                viewAssignment(item.id);
+            });
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "primary";
+            deleteButton.textContent = "Delete";
+            deleteButton.addEventListener("click", () => {
+                deleteAssignment(item.id);
+            });
+
+            actionCell.append(viewButton, deleteButton);
+            row.appendChild(actionCell);
+
+            table.appendChild(row);
+        });
+
+        document.getElementById("emptyMessage").style.display =
+            filtered.length ? "none" : "block";
+
+        updateStats();
+    }
+
+    function updateStats() {
+        document.getElementById("totalAssignments").textContent =
+            assignments.length;
+
+        document.getElementById("publishedCount").textContent =
+            assignments.filter(a => a.status === "Published").length;
+
+        document.getElementById("submittedCount").textContent =
+            assignments.reduce((sum, a) => sum + a.submitted, 0);
+
+        document.getElementById("pendingCount").textContent =
+            assignments.reduce(
+                (sum, a) => sum + Math.max(0, a.totalStudents - a.submitted),
+                0
+            );
+    }
+
+    function openCreateModal() {
+        document.getElementById("createModal").classList.add("show");
+    }
+
+    function closeCreateModal() {
+        document.getElementById("createModal").classList.remove("show");
+    }
+
+    function closeDetailsModal() {
+        document.getElementById("detailsModal").classList.remove("show");
+    }
+
+    document.getElementById("assignmentForm")
+        .addEventListener("submit", event => {
+
+            event.preventDefault();
+
+            const dueDate = document.getElementById("dueDate").value;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const selectedDate = new Date(dueDate + "T00:00:00");
+
+            if (selectedDate < today) {
+                alert("Due date cannot be in the past.");
+                return;
+            }
+
+            const course = document.getElementById("course").value;
+            const batch = document.getElementById("batch").value;
+
+            const validBatches = {
+                "AutoCAD": ["AUT-01"],
+                "Creo": ["CRE-02"],
+                "Python": ["PY-01"],
+                "Web Development": ["WEB-01"]
+            };
+
+            if (!validBatches[course]?.includes(batch)) {
+                alert("Please select a batch matching the selected course.");
+                return;
+            }
+
+            const assignment = {
+                id: nextId++,
+                title: document.getElementById("title").value.trim(),
+                course,
+                batch,
+                dueDate,
+                marks: Number(document.getElementById("marks").value),
+                description: document.getElementById("description").value.trim(),
+                status: document.getElementById("assignmentStatus").value,
+                submitted: 0,
+                totalStudents: 0
+            };
+
+            if (!assignment.title || !assignment.description ||
+                !Number.isInteger(assignment.marks) ||
+                assignment.marks < 1) {
+                alert("Please enter valid assignment details.");
+                return;
+            }
+
+            assignments.unshift(assignment);
+
+            event.target.reset();
+            document.getElementById("marks").value = 100;
+
+            closeCreateModal();
+            renderAssignments();
+
+            alert("Assignment added to the demo list.");
+        });
+
+    function viewAssignment(id) {
+        const item = assignments.find(a => a.id === id);
+        if (!item) return;
+
+        const details = document.getElementById("assignmentDetails");
+        details.innerHTML = "";
+
+        const fields = [
+            ["Title", item.title],
+            ["Course", item.course],
+            ["Batch", item.batch],
+            ["Due Date", item.dueDate],
+            ["Maximum Marks", item.marks],
+            ["Description", item.description],
+            ["Status", item.status],
+            ["Submissions", item.submitted + " / " + item.totalStudents]
+        ];
+
+        fields.forEach(([label, value]) => {
+            const row = document.createElement("p");
+            row.style.padding = "12px 0";
+            row.style.borderBottom = "1px solid #eee";
+            row.style.fontSize = "13px";
+
+            const strong = document.createElement("strong");
+            strong.textContent = label + ": ";
+
+            row.append(strong, document.createTextNode(value));
+            details.appendChild(row);
+        });
+
+        document.getElementById("detailsModal").classList.add("show");
+    }
+
+    function deleteAssignment(id) {
+        if (!confirm("Delete this demo assignment?")) return;
+
+        assignments = assignments.filter(a => a.id !== id);
+        renderAssignments();
+    }
+
+    function toggleSidebar() {
+        document.getElementById("sidebar")
+            .classList.toggle("open");
+    }
+
+    document.getElementById("searchInput")
+        .addEventListener("input", renderAssignments);
+
+    document.getElementById("courseFilter")
+        .addEventListener("change", renderAssignments);
+
+    document.getElementById("statusFilter")
+        .addEventListener("change", renderAssignments);
+
+    document.getElementById("createModal")
+        .addEventListener("click", event => {
+            if (event.target.id === "createModal") closeCreateModal();
+        });
+
+    document.getElementById("detailsModal")
+        .addEventListener("click", event => {
+            if (event.target.id === "detailsModal") closeDetailsModal();
+        });
+
+    renderAssignments();
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["Trainer"]));</script>
+</body>
+</html>

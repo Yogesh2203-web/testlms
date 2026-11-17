@@ -1,0 +1,66 @@
+INSTITUTE LMS - CORRECTED PROJECT
+================================
+Final local database: InstituteLMSDb
+
+IMPORTANT BACKUP
+----------------
+Before changing the database, create a full SQL Server backup of InstituteLMSDb in SSMS.
+The compatibility script adds missing authentication columns and creates operational tables only when absent. It does not delete existing rows or overwrite existing tables.
+
+1. APPLY DATABASE COMPATIBILITY SCRIPT
+--------------------------------------
+Open SSMS, connect to your SQL Server, open:
+  database/01_InstituteLMSDb_Compatibility.sql
+Execute the whole script. Confirm the final SELECT shows the existing BusinessHead row.
+
+2. START BACKEND (Windows PowerShell)
+-------------------------------------
+Open PowerShell (not Command Prompt), then run:
+  cd "E:\AaInstituteLMS_Login_Connection_Fixed\InstituteLMS_Vercel_Deployment\backend\InstituteLMS.API"
+  $env:ASPNETCORE_ENVIRONMENT = "Development"
+  $env:AdminSetupKey = "REPLACE_WITH_A_LONG_RANDOM_LOCAL_SETUP_KEY"
+  dotnet restore
+  dotnet run --urls http://localhost:5000
+
+If your extracted folder has a different path, change only the cd path.
+Keep this PowerShell window open. Health check:
+  http://localhost:5000/api/health
+Swagger in Development:
+  http://localhost:5000/swagger
+
+3. RESET THE EXISTING BUSINESS HEAD PASSWORD (ONLY IF NEEDED)
+------------------------------------------------------------
+This is a development-only recovery endpoint. It preserves the existing user ID, email, phone and role; it replaces only the password hash and clears lockout state.
+Open a SECOND PowerShell window and run (replace values locally; never send your password to anyone):
+  $body = @{ Email = "admin@institutelms.com"; Password = "CHOOSE_A_NEW_PRIVATE_PASSWORD_12_CHARS_MINIMUM"; SetupKey = "REPLACE_WITH_A_LONG_RANDOM_LOCAL_SETUP_KEY" } | ConvertTo-Json
+  Invoke-RestMethod -Uri "http://localhost:5000/api/auth/dev-reset-business-head" -Method Post -ContentType "application/json" -Body $body
+The SetupKey must exactly match the value used in the backend PowerShell window. Do not use this endpoint in Production; it is not registered there.
+
+4. START FRONTEND
+-----------------
+Open a THIRD PowerShell window:
+  cd "E:\AaInstituteLMS_Login_Connection_Fixed\InstituteLMS_Vercel_Deployment\frontend"
+  npm install
+  npm start
+Open:
+  http://localhost:4200/#/
+Login:
+  http://localhost:4200/#/login
+API URL is configured in frontend/public/lms-config.js as http://localhost:5000.
+
+5. PRODUCTION DEPLOYMENT CHECKLIST
+----------------------------------
+- Use a production SQL Server database and a least-privilege SQL login; do not expose a local desktop SQL Server directly to the internet.
+- Set ConnectionStrings__DefaultConnection using the hosting provider's secret/environment-variable settings.
+- Set Jwt__Key to a new cryptographically random secret of at least 32 bytes. Never use the development key in this file.
+- Set Jwt__Issuer and Jwt__Audience consistently.
+- Set Cors__AllowedOrigins to the exact deployed HTTPS frontend origin(s), not localhost or wildcard.
+- Set ASPNETCORE_ENVIRONMENT=Production.
+- Set the frontend API_BASE_URL to the deployed HTTPS API URL.
+- Enable HTTPS, configure backups, test account recovery, and test all four roles with least-privilege accounts.
+- Do not publish the local development reset endpoint or the AdminSetupKey.
+
+NOTES
+-----
+The uploaded project uses an Angular shell that serves the existing static LMS pages from public/original. The workspace angular.json is now also at frontend/angular.json, where Angular CLI expects it. The original copy under frontend/src/angular.json is retained for reference.
+The existing Business Head PasswordHash is preserved by the SQL compatibility script. If the previous password was entered as a placeholder, use the development-only reset instructions above to set a new private password.

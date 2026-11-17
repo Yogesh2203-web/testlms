@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Results | Institute LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:#f5f5f5;color:#171717}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:250px;background:#111;color:white;padding:25px 18px;position:fixed;height:100vh;overflow-y:auto;z-index:20}
+.brand{font-size:21px;font-weight:800;padding:5px 10px 30px}
+.brand span{color:#aaa}
+.nav-label{color:#777;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;padding:15px 10px 10px}
+.nav-link{display:block;padding:12px;margin-bottom:5px;border-radius:9px;text-decoration:none;color:#aaa;font-size:13px}
+.nav-link:hover,.nav-link.active{background:#292929;color:white}
+.main{margin-left:250px;width:calc(100% - 250px);padding:28px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}
+.topbar h1{font-size:25px;margin-bottom:5px}
+.topbar p{font-size:13px;color:#777}
+.profile{display:flex;align-items:center;gap:12px}
+.avatar{width:42px;height:42px;border-radius:50%;background:#111;color:white;display:grid;place-items:center;font-weight:700}
+.profile small{display:block;color:#888;margin-top:4px;font-size:11px}
+.menu-btn{display:none;background:#111;color:white;border:0;padding:10px 13px;border-radius:7px;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
+.stat{background:white;border:1px solid #eaeaea;border-radius:12px;padding:19px}
+.stat small{font-size:12px;color:#777}
+.stat h2{font-size:25px;margin-top:9px}
+.panel{background:white;border:1px solid #eaeaea;border-radius:13px;padding:20px;margin-bottom:20px}
+.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:17px}
+.panel-heading h2{font-size:16px}
+.select{padding:10px;border:1px solid #ddd;border-radius:8px;background:white}
+.result-hero{background:#111;color:white;border-radius:13px;padding:24px;margin-bottom:20px}
+.result-hero h2{font-size:18px;margin-bottom:8px}
+.result-hero p{font-size:12px;color:#bbb;line-height:1.7}
+.result-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:20px}
+.result-summary div{background:#242424;padding:15px;border-radius:10px}
+.result-summary small{font-size:10px;color:#aaa}
+.result-summary strong{display:block;font-size:23px;margin-top:7px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:600px}
+th,td{text-align:left;padding:14px 12px;border-bottom:1px solid #eee;font-size:12px}
+th{color:#777;font-size:11px;background:#fafafa}
+.pass{color:#23733b;font-weight:700}
+.fail{color:#b22;font-weight:700}
+.badge{padding:6px 9px;border-radius:20px;font-size:10px;font-weight:700;background:#e5f5e9;color:#23733b}
+.grade-card{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.grade-item{padding:16px;background:#f7f7f7;border-radius:10px}
+.grade-item small{font-size:11px;color:#888}
+.grade-item strong{display:block;font-size:20px;margin-top:8px}
+.btn{border:1px solid #111;border-radius:8px;padding:10px 14px;font-size:11px;font-weight:700;cursor:pointer}
+.dark{background:#111;color:white}
+.light{background:white;color:#111}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.notice{font-size:11px;color:#777;line-height:1.7}
+.footer{text-align:center;color:#999;font-size:11px;padding:25px 0}
+.overlay{display:none}
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){
+.sidebar{transform:translateX(-100%);transition:.3s}
+.sidebar.open{transform:translateX(0)}
+.overlay.show{display:block;position:fixed;inset:0;background:#0008;z-index:10}
+.main{margin-left:0;width:100%;padding:20px}
+.menu-btn{display:block}
+.topbar{justify-content:flex-start;flex-wrap:wrap}
+.profile{margin-left:auto}
+}
+@media(max-width:550px){
+.main{padding:15px}
+.topbar h1{font-size:20px}
+.profile-info{display:none}
+.stats{gap:10px}
+.stat{padding:14px}
+.stat h2{font-size:21px}
+.result-summary{grid-template-columns:1fr}
+.grade-card{grid-template-columns:1fr}
+}
+@media print{
+.sidebar,.menu-btn,.profile,.actions,.select,.footer{display:none!important}
+.main{margin:0;width:100%;padding:0}
+body{background:white}
+.panel,.result-hero{break-inside:avoid}
+}
+</style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+
+<body>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+    <div class="brand">INSTITUTE <span>LMS</span></div>
+    <div class="nav-label">Student Menu</div>
+    <a href="student.html" class="nav-link">▦ Dashboard</a>
+    <a href="student-courses.html" class="nav-link">▣ My Courses</a>
+    <a href="student-assignments.html" class="nav-link">✎ Assignments</a>
+    <a href="student-exams.html" class="nav-link">▤ Exams</a>
+    <a href="student-results.html" class="nav-link active">★ Results</a>
+    <a href="student-attendance.html" class="nav-link">◷ Attendance</a>
+    <a href="student-fees.html" class="nav-link">₹ Fees & Receipts</a>
+    <a href="student-learning.html" class="nav-link">▶ Learning Resources</a>
+    <div class="nav-label">Account</div>
+    <a href="student-profile.html" class="nav-link">♙ My Profile</a>
+    <a href="../pages/login.html" class="nav-link">↪ Logout</a>
+</aside>
+
+<main class="main">
+<header class="topbar">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <div>
+        <h1>My Results</h1>
+        <p>View your academic performance and exam marks.</p>
+    </div>
+    <div class="profile">
+        <div class="avatar">ST</div>
+        <div class="profile-info">
+            <strong>Student Name</strong>
+            <small>Student ID: STU-2026-001</small>
+        </div>
+    </div>
+</header>
+
+<section class="stats">
+    <div class="stat"><small>Exams Attempted</small><h2>03</h2></div>
+    <div class="stat"><small>Average Percentage</small><h2>82%</h2></div>
+    <div class="stat"><small>Passed Exams</small><h2>03</h2></div>
+    <div class="stat"><small>Failed Exams</small><h2>00</h2></div>
+</section>
+
+<section class="result-hero">
+    <h2>Academic Performance</h2>
+    <p>Student Name · STU-2026-001 · Main Branch</p>
+
+    <div class="result-summary">
+        <div>
+            <small>Overall Percentage</small>
+            <strong>82%</strong>
+        </div>
+        <div>
+            <small>Overall Grade</small>
+            <strong>A</strong>
+        </div>
+        <div>
+            <small>Overall Status</small>
+            <strong>PASS</strong>
+        </div>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-heading">
+        <h2>Examination Results</h2>
+        <select class="select" id="courseFilter">
+            <option value="all">All Courses</option>
+            <option value="autocad">AutoCAD</option>
+            <option value="python">Python</option>
+            <option value="web">Web Development</option>
+        </select>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Exam Name</th>
+                    <th>Course</th>
+                    <th>Date</th>
+                    <th>Obtained</th>
+                    <th>Maximum</th>
+                    <th>Percentage</th>
+                    <th>Grade</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="resultRows">
+                <tr data-course="web">
+                    <td>Web Development Assessment</td>
+                    <td>Web Development</td>
+                    <td>25 Oct 2026</td>
+                    <td>41</td>
+                    <td>50</td>
+                    <td>82%</td>
+                    <td>A</td>
+                    <td class="pass">PASS</td>
+                </tr>
+                <tr data-course="autocad">
+                    <td>AutoCAD Monthly Test</td>
+                    <td>AutoCAD</td>
+                    <td>20 Oct 2026</td>
+                    <td>42</td>
+                    <td>50</td>
+                    <td>84%</td>
+                    <td>A</td>
+                    <td class="pass">PASS</td>
+                </tr>
+                <tr data-course="python">
+                    <td>Python Basic Test</td>
+                    <td>Python</td>
+                    <td>18 Oct 2026</td>
+                    <td>80</td>
+                    <td>100</td>
+                    <td>80%</td>
+                    <td>A</td>
+                    <td class="pass">PASS</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-heading">
+        <h2>Performance Summary</h2>
+    </div>
+
+    <div class="grade-card">
+        <div class="grade-item">
+            <small>Highest Score</small>
+            <strong>84%</strong>
+        </div>
+        <div class="grade-item">
+            <small>Average Score</small>
+            <strong>82%</strong>
+        </div>
+        <div class="grade-item">
+            <small>Lowest Score</small>
+            <strong>80%</strong>
+        </div>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-heading">
+        <h2>Result Report</h2>
+    </div>
+    <p class="notice">
+        This is a demonstration result report. Official marks and grades must
+        be published and verified by an authorized trainer or manager.
+        Contact your branch for corrections or result-related questions.
+    </p>
+    <div class="actions" style="margin-top:17px">
+        <button class="btn dark" onclick="window.print()">Print / Save PDF</button>
+        <button class="btn light" onclick="exportResults()">Export CSV</button>
+    </div>
+</section>
+
+<footer class="footer">
+    © 2026 Institute LMS. Sample result information.
+</footer>
+</main>
+</div>
+
+<script>
+function toggleMenu(){
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("overlay").classList.toggle("show");
+}
+
+document.getElementById("courseFilter").addEventListener("change", function(){
+    const filter = this.value;
+    document.querySelectorAll("#resultRows tr").forEach(row => {
+        row.style.display =
+            filter === "all" || row.dataset.course === filter ? "" : "none";
+    });
+});
+
+function exportResults(){
+    const rows = [
+        ["Exam Name","Course","Date","Obtained","Maximum","Percentage","Grade","Status"]
+    ];
+
+    document.querySelectorAll("#resultRows tr").forEach(row => {
+        if(row.style.display === "none") return;
+
+        rows.push([...row.cells].map(cell => cell.textContent.trim()));
+    });
+
+    const csv = rows.map(row =>
+        row.map(value => '"' + value.replace(/"/g, '""') + '"').join(",")
+    ).join("\n");
+
+    const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "student-results.csv";
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["Student"]));</script>
+</body>
+</html>

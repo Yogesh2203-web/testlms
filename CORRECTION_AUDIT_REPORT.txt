@@ -1,0 +1,28 @@
+INSTITUTE LMS - DEPLOYMENT PREPARATION AUDIT
+===========================================
+Target database: InstituteLMSDb
+Architecture: Vercel static frontend + ASP.NET Core 10 API container + managed SQL Server
+
+CHANGES IN THIS PACKAGE
+----------------------
+1. Base appsettings.json no longer contains a machine-specific SQL Server connection string or a JWT secret.
+2. appsettings.Development.json contains the local development connection to InstituteLMSDb and a clearly development-only JWT signing key.
+3. Production API startup requires a database connection string and exact HTTPS CORS origins; it rejects the development JWT key.
+4. SQL Server transient retry is enabled.
+5. Existing Users mapping explicitly maps AppUser.Id to dbo.Users.UserId and maps the known user columns.
+6. The SQL compatibility script adds missing authentication columns and creates missing operational tables only if absent; it does not drop user rows or replace existing password hashes.
+7. Frontend build can inject the deployed public API origin through LMS_API_BASE_URL. Vercel fails its build if that variable is missing.
+8. Vercel root build config installs/builds the Angular frontend and publishes the correct browser output directory.
+9. API Dockerfile targets .NET 10 and listens on port 8080.
+10. Login page uses the real API authentication handler; the duplicate/demo login submit handler was removed in the corrected source.
+11. Dashboard pages now validate the token with /api/auth/me and enforce role-specific page access in the browser; API authorization remains the security boundary.
+12. Local and production deployment instructions are consolidated in DEPLOY_NOW.md.
+
+IMPORTANT LIMITATIONS
+---------------------
+- This environment does not have the .NET SDK installed, and npm dependency installation could not complete within the available network/time limit. A full dotnet build, Angular production build, container build, live database migration, and live authentication test have NOT been performed.
+- The existing SQL screenshots confirm the dbo.Users columns and one BusinessHead row, but do not prove the complete schema of every pre-existing operational table. Review existing table definitions before applying the SQL compatibility script.
+- The SQL compatibility script must be applied to a backed-up database. For cloud deployment, restore/import the intended LMS data to a managed remote SQL Server first; a local desktop SQL Server is not a production database endpoint.
+- The frontend and API deployment settings are prepared, but the user must create hosting services, set secret environment variables, configure domains, and perform acceptance/security tests.
+- Some legacy LMS screens or workflows may remain presentation-only or partially wired. Verify each create/read/update/delete workflow before real institute use.
+- Do not store real student data until role isolation, backup/restore, privacy, rate limiting, monitoring, and security reviews are complete.

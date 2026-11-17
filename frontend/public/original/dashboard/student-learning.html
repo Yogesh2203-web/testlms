@@ -1,0 +1,438 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learning Resources | Institute LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:#f5f5f5;color:#171717}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:250px;background:#111;color:white;padding:25px 18px;position:fixed;height:100vh;overflow-y:auto;z-index:20}
+.brand{font-size:21px;font-weight:800;padding:5px 10px 30px}
+.brand span{color:#aaa}
+.nav-label{color:#777;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;padding:15px 10px 10px}
+.nav-link{display:block;padding:12px;margin-bottom:5px;border-radius:9px;text-decoration:none;color:#aaa;font-size:13px}
+.nav-link:hover,.nav-link.active{background:#292929;color:white}
+.main{margin-left:250px;width:calc(100% - 250px);padding:28px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}
+.topbar h1{font-size:25px;margin-bottom:5px}
+.topbar p{font-size:13px;color:#777}
+.profile{display:flex;align-items:center;gap:12px}
+.avatar{width:42px;height:42px;border-radius:50%;background:#111;color:white;display:grid;place-items:center;font-weight:700}
+.profile small{display:block;color:#888;margin-top:4px;font-size:11px}
+.menu-btn{display:none;background:#111;color:white;border:0;padding:10px 13px;border-radius:7px;cursor:pointer}
+.hero{background:#111;color:white;padding:25px;border-radius:14px;margin-bottom:23px}
+.hero h2{font-size:21px;margin-bottom:9px}
+.hero p{font-size:12px;color:#bbb;line-height:1.7}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:23px}
+.stat{background:white;border:1px solid #eaeaea;border-radius:12px;padding:18px}
+.stat small{font-size:12px;color:#777}
+.stat h2{font-size:24px;margin-top:8px}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.search{flex:1;min-width:180px;padding:12px;border:1px solid #ddd;border-radius:8px;outline:none}
+.filter{padding:12px;border:1px solid #ddd;border-radius:8px;background:white}
+.section-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.section-heading h2{font-size:17px}
+.course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:24px}
+.course-card{background:white;border:1px solid #eaeaea;border-radius:12px;padding:18px}
+.course-icon{width:43px;height:43px;background:#111;color:white;border-radius:10px;display:grid;place-items:center;font-weight:800;margin-bottom:14px}
+.course-card h3{font-size:14px;margin-bottom:7px}
+.course-card p{font-size:11px;color:#888;margin-bottom:13px}
+.progress-top{display:flex;justify-content:space-between;font-size:10px;margin-bottom:7px}
+.progress{height:6px;background:#eee;border-radius:10px;overflow:hidden}
+.progress span{display:block;height:100%;background:#111;border-radius:10px}
+.panel{background:white;border:1px solid #eaeaea;border-radius:13px;padding:20px;margin-bottom:20px}
+.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:17px}
+.panel-heading h2{font-size:16px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tab{padding:9px 14px;border:1px solid #ddd;background:white;border-radius:8px;font-size:11px;cursor:pointer}
+.tab.active{background:#111;color:white;border-color:#111}
+.lesson-list{display:grid;gap:10px}
+.lesson{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px;border:1px solid #eee;border-radius:9px}
+.lesson-info{display:flex;align-items:center;gap:12px;min-width:0}
+.lesson-icon{width:36px;height:36px;border-radius:8px;background:#f0f0f0;display:grid;place-items:center;flex-shrink:0}
+.lesson h4{font-size:12px;margin-bottom:5px}
+.lesson p{font-size:10px;color:#888}
+.lesson-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.badge{font-size:10px;padding:6px 8px;border-radius:20px;background:#e5f5e9;color:#23733b}
+.badge.pending{background:#fff2d9;color:#946000}
+.btn{border:1px solid #111;border-radius:7px;padding:8px 11px;font-size:10px;font-weight:700;cursor:pointer;text-decoration:none}
+.dark{background:#111;color:white}
+.light{background:white;color:#111}
+.resource-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.resource{border:1px solid #eee;border-radius:10px;padding:15px}
+.resource h4{font-size:12px;margin:10px 0 6px}
+.resource p{font-size:10px;color:#888;margin-bottom:12px}
+.resource-icon{font-size:23px}
+.empty{display:none;text-align:center;padding:25px;color:#888;font-size:12px}
+.footer{text-align:center;color:#999;font-size:11px;padding:25px 0}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:50;align-items:center;justify-content:center;padding:15px}
+.modal.show{display:flex}
+.modal-box{background:white;width:100%;max-width:650px;border-radius:14px;padding:20px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.modal-head h2{font-size:17px}
+.close{border:0;background:#eee;width:30px;height:30px;border-radius:50%;cursor:pointer}
+.video-placeholder{background:#111;color:white;aspect-ratio:16/9;display:grid;place-items:center;text-align:center;border-radius:10px;padding:20px}
+.video-placeholder strong{font-size:35px}
+.video-placeholder p{font-size:12px;color:#bbb;margin-top:10px}
+.overlay{display:none}
+@media(max-width:1100px){.course-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){
+.sidebar{transform:translateX(-100%);transition:.3s}
+.sidebar.open{transform:translateX(0)}
+.overlay.show{display:block;position:fixed;inset:0;background:#0008;z-index:10}
+.main{margin-left:0;width:100%;padding:20px}
+.menu-btn{display:block}
+.topbar{justify-content:flex-start;flex-wrap:wrap}
+.profile{margin-left:auto}
+}
+@media(max-width:550px){
+.main{padding:15px}
+.topbar h1{font-size:20px}
+.profile-info{display:none}
+.stats{grid-template-columns:1fr}
+.course-grid,.resource-grid{grid-template-columns:1fr}
+.panel{padding:14px}
+.lesson{align-items:flex-start;flex-direction:column}
+}
+</style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+
+<body>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+    <div class="brand">INSTITUTE <span>LMS</span></div>
+    <div class="nav-label">Student Menu</div>
+    <a href="student.html" class="nav-link">▦ Dashboard</a>
+    <a href="student-courses.html" class="nav-link">▣ My Courses</a>
+    <a href="student-assignments.html" class="nav-link">✎ Assignments</a>
+    <a href="student-exams.html" class="nav-link">▤ Exams</a>
+    <a href="student-results.html" class="nav-link">★ Results</a>
+    <a href="student-attendance.html" class="nav-link">◷ Attendance</a>
+    <a href="student-fees.html" class="nav-link">₹ Fees & Receipts</a>
+    <a href="student-learning.html" class="nav-link active">▶ Learning Resources</a>
+    <div class="nav-label">Account</div>
+    <a href="student-profile.html" class="nav-link">♙ My Profile</a>
+    <a href="../pages/login.html" class="nav-link">↪ Logout</a>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <div>
+        <h1>Learning Resources</h1>
+        <p>Study lessons, videos and course materials.</p>
+    </div>
+    <div class="profile">
+        <div class="avatar">ST</div>
+        <div class="profile-info">
+            <strong>Student Name</strong>
+            <small>Student ID: STU-2026-001</small>
+        </div>
+    </div>
+</header>
+
+<section class="hero">
+    <h2>Your Learning Space</h2>
+    <p>Access your enrolled course materials, follow lessons and keep track of your learning progress in one place.</p>
+</section>
+
+<section class="stats">
+    <div class="stat"><small>Available Lessons</small><h2>24</h2></div>
+    <div class="stat"><small>Completed Lessons</small><h2 id="completedCount">08</h2></div>
+    <div class="stat"><small>Study Materials</small><h2>12</h2></div>
+</section>
+
+<section>
+    <div class="section-heading"><h2>My Learning Courses</h2></div>
+
+    <div class="course-grid">
+        <article class="course-card">
+            <div class="course-icon">AC</div>
+            <h3>AutoCAD Professional</h3>
+            <p>12 lessons · Rahul Patil</p>
+            <div class="progress-top"><span>Learning Progress</span><strong>75%</strong></div>
+            <div class="progress"><span style="width:75%"></span></div>
+        </article>
+
+        <article class="course-card">
+            <div class="course-icon">CR</div>
+            <h3>Creo 3D Design</h3>
+            <p>8 lessons · Amit Shinde</p>
+            <div class="progress-top"><span>Learning Progress</span><strong>45%</strong></div>
+            <div class="progress"><span style="width:45%"></span></div>
+        </article>
+
+        <article class="course-card">
+            <div class="course-icon">PY</div>
+            <h3>Python Programming</h3>
+            <p>4 lessons · Priya Deshmukh</p>
+            <div class="progress-top"><span>Learning Progress</span><strong>60%</strong></div>
+            <div class="progress"><span style="width:60%"></span></div>
+        </article>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-heading">
+        <h2>Course Lessons</h2>
+        <select class="filter" id="courseFilter">
+            <option value="all">All Courses</option>
+            <option value="autocad">AutoCAD</option>
+            <option value="creo">Creo</option>
+            <option value="python">Python</option>
+        </select>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" data-filter="all">All Lessons</button>
+        <button class="tab" data-filter="completed">Completed</button>
+        <button class="tab" data-filter="pending">Not Completed</button>
+    </div>
+
+    <div class="lesson-list" id="lessonList">
+
+        <div class="lesson" data-course="autocad" data-status="completed">
+            <div class="lesson-info">
+                <div class="lesson-icon">▶</div>
+                <div>
+                    <h4>Introduction to AutoCAD</h4>
+                    <p>AutoCAD · Video Lesson · 20 minutes</p>
+                </div>
+            </div>
+            <div class="lesson-actions">
+                <span class="badge">Completed</span>
+                <button class="btn dark" onclick="openLesson('Introduction to AutoCAD')">View Lesson</button>
+            </div>
+        </div>
+
+        <div class="lesson" data-course="autocad" data-status="pending">
+            <div class="lesson-info">
+                <div class="lesson-icon">▶</div>
+                <div>
+                    <h4>Drawing Tools and Commands</h4>
+                    <p>AutoCAD · Video Lesson · 35 minutes</p>
+                </div>
+            </div>
+            <div class="lesson-actions">
+                <span class="badge pending">Not Completed</span>
+                <button class="btn dark" onclick="openLesson('Drawing Tools and Commands')">View Lesson</button>
+            </div>
+        </div>
+
+        <div class="lesson" data-course="autocad" data-status="pending">
+            <div class="lesson-info">
+                <div class="lesson-icon">📄</div>
+                <div>
+                    <h4>AutoCAD Practice Worksheet</h4>
+                    <p>AutoCAD · PDF Material</p>
+                </div>
+            </div>
+            <div class="lesson-actions">
+                <span class="badge pending">Not Completed</span>
+                <button class="btn dark" onclick="showResource('AutoCAD Practice Worksheet')">View Material</button>
+            </div>
+        </div>
+
+        <div class="lesson" data-course="creo" data-status="completed">
+            <div class="lesson-info">
+                <div class="lesson-icon">▶</div>
+                <div>
+                    <h4>Creo Interface Introduction</h4>
+                    <p>Creo · Video Lesson · 25 minutes</p>
+                </div>
+            </div>
+            <div class="lesson-actions">
+                <span class="badge">Completed</span>
+                <button class="btn dark" onclick="openLesson('Creo Interface Introduction')">View Lesson</button>
+            </div>
+        </div>
+
+        <div class="lesson" data-course="creo" data-status="pending">
+            <div class="lesson-info">
+                <div class="lesson-icon">▶</div>
+                <div>
+                    <h4>Basic 3D Modelling</h4>
+                    <p>Creo · Video Lesson · 40 minutes</p>
+                </div>
+            </div>
+            <div class="lesson-actions">
+                <span class="badge pending">Not Completed</span>
+                <button class="btn dark" onclick="openLesson('Basic 3D Modelling')">View Lesson</button>
+            </div>
+        </div>
+
+        <div class="lesson" data-course="python" data-status="completed">
+            <div class="lesson-info">
+                <div class="lesson-icon">📄</div>
+                <div>
+                    <h4>Python Programming Notes</h4>
+                    <p>Python · Study Material</p>
+                </div>
+            </div>
+            <div class="lesson-actions">
+                <span class="badge">Completed</span>
+                <button class="btn dark" onclick="showResource('Python Programming Notes')">View Material</button>
+            </div>
+        </div>
+
+        <div class="lesson" data-course="python" data-status="pending">
+            <div class="lesson-info">
+                <div class="lesson-icon">▶</div>
+                <div>
+                    <h4>Python Variables and Data Types</h4>
+                    <p>Python · Video Lesson · 30 minutes</p>
+                </div>
+            </div>
+            <div class="lesson-actions">
+                <span class="badge pending">Not Completed</span>
+                <button class="btn dark" onclick="openLesson('Python Variables and Data Types')">View Lesson</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="empty" id="emptyState">No lessons found.</div>
+</section>
+
+<section class="panel">
+    <div class="panel-heading"><h2>Study Materials</h2></div>
+
+    <div class="resource-grid">
+        <div class="resource">
+            <div class="resource-icon">📄</div>
+            <h4>AutoCAD Notes</h4>
+            <p>PDF · Course Notes</p>
+            <button class="btn light" onclick="showResource('AutoCAD Notes')">Open</button>
+        </div>
+
+        <div class="resource">
+            <div class="resource-icon">📘</div>
+            <h4>Creo Practice Guide</h4>
+            <p>PDF · Practical Guide</p>
+            <button class="btn light" onclick="showResource('Creo Practice Guide')">Open</button>
+        </div>
+
+        <div class="resource">
+            <div class="resource-icon">📄</div>
+            <h4>Python Notes</h4>
+            <p>PDF · Programming Notes</p>
+            <button class="btn light" onclick="showResource('Python Notes')">Open</button>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    © 2026 Institute LMS. Sample learning resources.
+    <br><br>
+    Real videos and study files must be uploaded and authorized by the institute.
+</footer>
+
+</main>
+</div>
+
+<div class="modal" id="lessonModal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h2 id="modalTitle">Lesson</h2>
+            <button class="close" onclick="closeModal()">✕</button>
+        </div>
+
+        <div class="video-placeholder">
+            <div>
+                <strong>▶</strong>
+                <p>Video player will appear here after a lesson video is configured.</p>
+            </div>
+        </div>
+
+        <p style="font-size:11px;color:#888;margin-top:13px">
+            This is a demonstration player. No actual video is connected.
+        </p>
+
+        <button class="btn dark" style="margin-top:15px;width:100%" onclick="markCompleted()">
+            Mark Lesson as Completed
+        </button>
+    </div>
+</div>
+
+<script>
+function toggleMenu(){
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("overlay").classList.toggle("show");
+}
+
+function openLesson(name){
+    document.getElementById("modalTitle").textContent = name;
+    document.getElementById("lessonModal").classList.add("show");
+}
+
+function closeModal(){
+    document.getElementById("lessonModal").classList.remove("show");
+}
+
+function markCompleted(){
+    alert("Demo: Lesson marked as completed locally. Backend integration is required to save progress.");
+    closeModal();
+}
+
+function showResource(name){
+    alert(name + "\n\nNo actual study file has been uploaded yet.");
+}
+
+const tabs = document.querySelectorAll(".tab");
+const lessons = [...document.querySelectorAll(".lesson")];
+const courseFilter = document.getElementById("courseFilter");
+let statusFilter = "all";
+
+function filterLessons(){
+    const course = courseFilter.value;
+    let visible = 0;
+
+    lessons.forEach(lesson => {
+        const courseMatch = course === "all" || lesson.dataset.course === course;
+        const statusMatch = statusFilter === "all" || lesson.dataset.status === statusFilter;
+        const show = courseMatch && statusMatch;
+
+        lesson.style.display = show ? "flex" : "none";
+        if(show) visible++;
+    });
+
+    document.getElementById("emptyState").style.display =
+        visible === 0 ? "block" : "none";
+}
+
+tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+        tabs.forEach(item => item.classList.remove("active"));
+        tab.classList.add("active");
+        statusFilter = tab.dataset.filter;
+        filterLessons();
+    });
+});
+
+courseFilter.addEventListener("change", filterLessons);
+
+document.getElementById("lessonModal").addEventListener("click", event => {
+    if(event.target.id === "lessonModal") closeModal();
+});
+
+document.getElementById("completedCount").textContent =
+    lessons.filter(item => item.dataset.status === "completed").length;
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["Student"]));</script>
+</body>
+</html>

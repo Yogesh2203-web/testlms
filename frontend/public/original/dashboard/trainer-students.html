@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Students | Institute LMS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #111;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            background: #111;
+            color: white;
+            padding: 25px 15px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 19px;
+            font-weight: bold;
+            padding: 0 12px 30px;
+        }
+
+        .brand small {
+            display: block;
+            color: #999;
+            font-size: 11px;
+            margin-top: 7px;
+            font-weight: normal;
+        }
+
+        .nav-label {
+            color: #888;
+            font-size: 10px;
+            padding: 15px 12px 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 13px 12px;
+            color: #bbb;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: white;
+            color: #111;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 75px;
+            background: white;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+
+        .topbar h2 {
+            font-size: 19px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #111;
+            color: white;
+            display: grid;
+            place-items: center;
+        }
+
+        .content {
+            padding: 30px;
+            max-width: 1450px;
+            margin: auto;
+        }
+
+        .heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            font-size: 26px;
+            margin-bottom: 7px;
+        }
+
+        .heading p {
+            color: #777;
+            font-size: 13px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .stat-card p {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h2 {
+            font-size: 25px;
+        }
+
+        .panel {
+            background: white;
+            padding: 22px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        input,
+        select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+            font-size: 13px;
+        }
+
+        .filters input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            padding: 11px 15px;
+            font-size: 12px;
+        }
+
+        .primary {
+            background: #111;
+            color: white;
+        }
+
+        .secondary {
+            background: #eee;
+            color: #111;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 750px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 11px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        th {
+            color: #777;
+            background: #fafafa;
+        }
+
+        .badge {
+            background: #eee;
+            padding: 5px 9px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 7px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.65);
+            z-index: 20;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            padding: 25px;
+            border-radius: 9px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .modal-header button {
+            background: #eee;
+        }
+
+        .detail {
+            padding: 13px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .detail span:first-child {
+            color: #777;
+        }
+
+        .notice {
+            background: #eee;
+            padding: 13px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .mobile-menu {
+            display: none;
+            background: none;
+            font-size: 22px;
+        }
+
+        @media(max-width: 750px) {
+            .sidebar {
+                display: none;
+                position: fixed;
+                z-index: 10;
+                height: 100vh;
+                overflow-y: auto;
+            }
+
+            .sidebar.open {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .content {
+                padding: 17px;
+            }
+        }
+
+        @media(max-width: 500px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .profile > div:not(.avatar) {
+                display: none;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            INSTITUTE LMS
+            <small>TRAINER PANEL</small>
+        </div>
+
+        <div class="nav-label">Main Menu</div>
+
+        <a href="trainer.html" class="nav-link">Dashboard</a>
+        <a href="trainer-students.html" class="nav-link active">My Students</a>
+        <a href="trainer-attendance.html" class="nav-link">Attendance</a>
+        <a href="trainer-assignments.html" class="nav-link">Assignments</a>
+        <a href="trainer-exams.html" class="nav-link">Exams & Results</a>
+
+        <div class="nav-label">Account</div>
+
+        <a href="trainer-settings.html" class="nav-link">My Profile</a>
+        <a href="../pages/login.html" class="nav-link">Logout</a>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div style="display:flex;align-items:center;gap:15px">
+                <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+                <h2>My Students</h2>
+            </div>
+
+            <div class="profile">
+                <div>
+                    <strong>Trainer Account</strong>
+                    <p style="font-size:11px;color:#777;margin-top:4px">
+                        Main Branch
+                    </p>
+                </div>
+                <div class="avatar">T</div>
+            </div>
+        </header>
+
+        <div class="content">
+
+            <section class="heading">
+                <div>
+                    <h1>Assigned Students</h1>
+                    <p>View students from your assigned batches.</p>
+                </div>
+            </section>
+
+            <section class="stats">
+
+                <div class="stat-card">
+                    <p>Total Students</p>
+                    <h2 id="totalCount">6</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Active Students</p>
+                    <h2 id="activeCount">5</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Completed Students</p>
+                    <h2 id="completedCount">1</h2>
+                </div>
+
+            </section>
+
+            <section class="panel">
+
+                <div class="filters">
+
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Search name, student ID or mobile..."
+                    >
+
+                    <select id="courseFilter">
+                        <option value="">All Courses</option>
+                        <option>AutoCAD</option>
+                        <option>Creo</option>
+                        <option>Web Development</option>
+                        <option>Python</option>
+                    </select>
+
+                    <select id="batchFilter">
+                        <option value="">All Batches</option>
+                        <option>AUT-01</option>
+                        <option>CRE-02</option>
+                        <option>WEB-01</option>
+                        <option>PY-01</option>
+                    </select>
+
+                    <button class="secondary" onclick="resetFilters()">
+                        Reset
+                    </button>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Student Name</th>
+                                <th>Mobile</th>
+                                <th>Course</th>
+                                <th>Batch</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="studentTable"></tbody>
+                    </table>
+
+                    <p id="emptyMessage"
+                       style="display:none;text-align:center;padding:25px;color:#777;font-size:13px">
+                        No matching students found.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <div class="notice">
+                <strong>Demo mode:</strong> This page displays sample student
+                records. In production, the backend must return only students
+                assigned to the logged-in trainer. Personal student information
+                should only be visible to authorized staff.
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- Student Details Modal -->
+
+<div class="modal" id="studentModal">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h3>Student Details</h3>
+            <button onclick="closeModal()">✕</button>
+        </div>
+
+        <div id="studentDetails"></div>
+
+    </div>
+</div>
+
+<script>
+    const students = [
+        {
+            id: "STD1001",
+            name: "Rahul Patil",
+            mobile: "9876543210",
+            email: "rahul@example.com",
+            course: "AutoCAD",
+            batch: "AUT-01",
+            branch: "Main Branch",
+            status: "Active",
+            qualification: "Diploma",
+            year: "2025"
+        },
+        {
+            id: "STD1002",
+            name: "Priya Sharma",
+            mobile: "9876543211",
+            email: "priya@example.com",
+            course: "Python",
+            batch: "PY-01",
+            branch: "Main Branch",
+            status: "Active",
+            qualification: "BCA",
+            year: "2026"
+        },
+        {
+            id: "STD1003",
+            name: "Amit More",
+            mobile: "9876543212",
+            email: "amit@example.com",
+            course: "Creo",
+            batch: "CRE-02",
+            branch: "Main Branch",
+            status: "Active",
+            qualification: "Diploma",
+            year: "2024"
+        },
+        {
+            id: "STD1004",
+            name: "Neha Patil",
+            mobile: "9876543213",
+            email: "neha@example.com",
+            course: "Web Development",
+            batch: "WEB-01",
+            branch: "Main Branch",
+            status: "Completed",
+            qualification: "BSc",
+            year: "2025"
+        },
+        {
+            id: "STD1005",
+            name: "Akash Deshmukh",
+            mobile: "9876543214",
+            email: "akash@example.com",
+            course: "AutoCAD",
+            batch: "AUT-01",
+            branch: "Main Branch",
+            status: "Active",
+            qualification: "ITI",
+            year: "2025"
+        },
+        {
+            id: "STD1006",
+            name: "Sneha Joshi",
+            mobile: "9876543215",
+            email: "sneha@example.com",
+            course: "Creo",
+            batch: "CRE-02",
+            branch: "Main Branch",
+            status: "Active",
+            qualification: "Diploma",
+            year: "2026"
+        }
+    ];
+
+    const table = document.getElementById("studentTable");
+
+    function renderStudents() {
+        const search = document.getElementById("searchInput")
+            .value.toLowerCase().trim();
+
+        const course = document.getElementById("courseFilter").value;
+        const batch = document.getElementById("batchFilter").value;
+
+        const filtered = students.filter(student => {
+            const matchesSearch =
+                student.name.toLowerCase().includes(search) ||
+                student.id.toLowerCase().includes(search) ||
+                student.mobile.includes(search);
+
+            return matchesSearch &&
+                (!course || student.course === course) &&
+                (!batch || student.batch === batch);
+        });
+
+        table.innerHTML = "";
+
+        filtered.forEach(student => {
+            const row = document.createElement("tr");
+
+            const values = [
+                student.id,
+                student.name,
+                student.mobile,
+                student.course,
+                student.batch,
+                student.status
+            ];
+
+            values.forEach(value => {
+                const cell = document.createElement("td");
+
+                if (value === "Active" || value === "Completed") {
+                    const badge = document.createElement("span");
+                    badge.className = "badge";
+                    badge.textContent = value;
+                    cell.appendChild(badge);
+                } else {
+                    cell.textContent = value;
+                }
+
+                row.appendChild(cell);
+            });
+
+            const actionCell = document.createElement("td");
+            const viewButton = document.createElement("button");
+
+            viewButton.className = "primary";
+            viewButton.textContent = "View";
+
+            viewButton.addEventListener("click", () => {
+                viewStudent(student.id);
+            });
+
+            actionCell.appendChild(viewButton);
+            row.appendChild(actionCell);
+
+            table.appendChild(row);
+        });
+
+        document.getElementById("emptyMessage").style.display =
+            filtered.length ? "none" : "block";
+
+        document.getElementById("totalCount").textContent =
+            students.length;
+
+        document.getElementById("activeCount").textContent =
+            students.filter(s => s.status === "Active").length;
+
+        document.getElementById("completedCount").textContent =
+            students.filter(s => s.status === "Completed").length;
+    }
+
+    function viewStudent(id) {
+        const student = students.find(s => s.id === id);
+
+        if (!student) return;
+
+        const details = document.getElementById("studentDetails");
+        details.innerHTML = "";
+
+        const fields = [
+            ["Student ID", student.id],
+            ["Full Name", student.name],
+            ["Mobile", student.mobile],
+            ["Email", student.email],
+            ["Course", student.course],
+            ["Batch", student.batch],
+            ["Branch", student.branch],
+            ["Qualification", student.qualification],
+            ["Passout Year", student.year],
+            ["Status", student.status]
+        ];
+
+        fields.forEach(([label, value]) => {
+            const row = document.createElement("div");
+            row.className = "detail";
+
+            const title = document.createElement("span");
+            title.textContent = label;
+
+            const content = document.createElement("strong");
+            content.textContent = value;
+
+            row.append(title, content);
+            details.appendChild(row);
+        });
+
+        document.getElementById("studentModal")
+            .classList.add("show");
+    }
+
+    function closeModal() {
+        document.getElementById("studentModal")
+            .classList.remove("show");
+    }
+
+    function resetFilters() {
+        document.getElementById("searchInput").value = "";
+        document.getElementById("courseFilter").value = "";
+        document.getElementById("batchFilter").value = "";
+
+        renderStudents();
+    }
+
+    function toggleSidebar() {
+        document.getElementById("sidebar")
+            .classList.toggle("open");
+    }
+
+    document.getElementById("searchInput")
+        .addEventListener("input", renderStudents);
+
+    document.getElementById("courseFilter")
+        .addEventListener("change", renderStudents);
+
+    document.getElementById("batchFilter")
+        .addEventListener("change", renderStudents);
+
+    document.getElementById("studentModal")
+        .addEventListener("click", event => {
+            if (event.target.id === "studentModal") {
+                closeModal();
+            }
+        });
+
+    renderStudents();
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["Trainer"]));</script>
+</body>
+</html>

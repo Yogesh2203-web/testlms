@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Exams | Institute LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:#f5f5f5;color:#171717}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:250px;background:#111;color:white;padding:25px 18px;position:fixed;height:100vh;overflow-y:auto;z-index:20}
+.brand{font-size:21px;font-weight:800;padding:5px 10px 30px}
+.brand span{color:#aaa}
+.nav-label{color:#777;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;padding:15px 10px 10px}
+.nav-link{display:block;padding:12px;margin-bottom:5px;border-radius:9px;text-decoration:none;color:#aaa;font-size:13px}
+.nav-link:hover,.nav-link.active{background:#292929;color:white}
+.main{margin-left:250px;width:calc(100% - 250px);padding:28px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}
+.topbar h1{font-size:25px;margin-bottom:5px}
+.topbar p{font-size:13px;color:#777}
+.profile{display:flex;align-items:center;gap:12px}
+.avatar{width:42px;height:42px;border-radius:50%;background:#111;color:white;display:grid;place-items:center;font-weight:700}
+.profile small{display:block;color:#888;margin-top:4px;font-size:11px}
+.menu-btn{display:none;background:#111;color:white;border:0;padding:10px 13px;border-radius:7px;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:23px}
+.stat{background:white;border:1px solid #eaeaea;border-radius:12px;padding:19px}
+.stat small{font-size:12px;color:#777}
+.stat h2{font-size:25px;margin-top:9px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:17px}
+.tab{padding:10px 16px;border:1px solid #ddd;background:white;border-radius:8px;font-size:12px;cursor:pointer}
+.tab.active{background:#111;color:white;border-color:#111}
+.exam-list{display:grid;gap:14px}
+.exam-card{background:white;border:1px solid #eaeaea;border-radius:13px;padding:20px}
+.exam-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.exam-card h3{font-size:15px;margin-bottom:7px}
+.meta{font-size:11px;color:#888;line-height:1.8}
+.description{font-size:12px;color:#666;line-height:1.7;margin:13px 0}
+.exam-info{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:15px 0}
+.info-box{background:#f7f7f7;padding:12px;border-radius:8px}
+.info-box small{display:block;color:#888;font-size:10px;margin-bottom:6px}
+.info-box strong{font-size:12px}
+.status{font-size:10px;font-weight:700;padding:7px 10px;border-radius:20px;white-space:nowrap}
+.upcoming{background:#e9efff;color:#3454a1}
+.completed{background:#e5f5e9;color:#23733b}
+.missed{background:#ffe7e7;color:#a22}
+.actions{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid #eee;padding-top:14px}
+.btn{border:1px solid #111;border-radius:8px;padding:10px 14px;font-size:11px;font-weight:700;cursor:pointer}
+.dark{background:#111;color:white}
+.light{background:white;color:#111}
+.empty{display:none;background:white;padding:35px;text-align:center;border-radius:12px;color:#777}
+.notice{background:#fff;border:1px solid #eaeaea;border-left:4px solid #111;border-radius:10px;padding:16px;margin-bottom:20px}
+.notice h3{font-size:13px;margin-bottom:6px}
+.notice p{font-size:11px;color:#777;line-height:1.7}
+.footer{text-align:center;color:#999;font-size:11px;padding:25px 0}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:50;align-items:center;justify-content:center;padding:15px}
+.modal.show{display:flex}
+.modal-box{background:white;width:100%;max-width:500px;border-radius:14px;padding:23px;max-height:90vh;overflow:auto}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-head h2{font-size:18px}
+.close{border:0;background:#eee;width:30px;height:30px;border-radius:50%;cursor:pointer}
+.instruction-list{padding-left:20px;color:#555;font-size:12px;line-height:2}
+.overlay{display:none}
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.exam-info{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){
+.sidebar{transform:translateX(-100%);transition:.3s}
+.sidebar.open{transform:translateX(0)}
+.overlay.show{display:block;position:fixed;inset:0;background:#0008;z-index:10}
+.main{margin-left:0;width:100%;padding:20px}
+.menu-btn{display:block}
+.topbar{justify-content:flex-start;flex-wrap:wrap}
+.profile{margin-left:auto}
+}
+@media(max-width:550px){
+.main{padding:15px}
+.topbar h1{font-size:20px}
+.profile-info{display:none}
+.stats{gap:10px}
+.stat{padding:14px}
+.stat h2{font-size:21px}
+.exam-card{padding:15px}
+.exam-top{flex-direction:column}
+.exam-info{grid-template-columns:1fr 1fr}
+}
+</style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+    <div class="brand">INSTITUTE <span>LMS</span></div>
+    <div class="nav-label">Student Menu</div>
+    <a href="student.html" class="nav-link">▦ Dashboard</a>
+    <a href="student-courses.html" class="nav-link">▣ My Courses</a>
+    <a href="student-assignments.html" class="nav-link">✎ Assignments</a>
+    <a href="student-exams.html" class="nav-link active">▤ Exams</a>
+    <a href="student-results.html" class="nav-link">★ Results</a>
+    <a href="student-attendance.html" class="nav-link">◷ Attendance</a>
+    <a href="student-fees.html" class="nav-link">₹ Fees & Receipts</a>
+    <a href="student-learning.html" class="nav-link">▶ Learning Resources</a>
+    <div class="nav-label">Account</div>
+    <a href="student-profile.html" class="nav-link">♙ My Profile</a>
+    <a href="../pages/login.html" class="nav-link">↪ Logout</a>
+</aside>
+
+<main class="main">
+<header class="topbar">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <div>
+        <h1>My Exams</h1>
+        <p>Check your examination schedule and status.</p>
+    </div>
+    <div class="profile">
+        <div class="avatar">ST</div>
+        <div class="profile-info">
+            <strong>Student Name</strong>
+            <small>Student ID: STU-2026-001</small>
+        </div>
+    </div>
+</header>
+
+<section class="stats">
+    <div class="stat"><small>Total Exams</small><h2 id="totalCount">04</h2></div>
+    <div class="stat"><small>Upcoming</small><h2 id="upcomingCount">02</h2></div>
+    <div class="stat"><small>Completed</small><h2 id="completedCount">01</h2></div>
+    <div class="stat"><small>Missed</small><h2 id="missedCount">01</h2></div>
+</section>
+
+<div class="notice">
+    <h3>Examination Notice</h3>
+    <p>Please check your exam date, reporting time and instructions before attending. Contact your trainer or branch manager if you find incorrect information.</p>
+</div>
+
+<div class="tabs">
+    <button class="tab active" data-filter="all">All Exams</button>
+    <button class="tab" data-filter="upcoming">Upcoming</button>
+    <button class="tab" data-filter="completed">Completed</button>
+    <button class="tab" data-filter="missed">Missed</button>
+</div>
+
+<section class="exam-list" id="examList">
+
+    <article class="exam-card" data-status="upcoming">
+        <div class="exam-top">
+            <div>
+                <h3>AutoCAD Monthly Test</h3>
+                <p class="meta">Course: AutoCAD Professional · Trainer: Rahul Patil</p>
+            </div>
+            <span class="status upcoming">Upcoming</span>
+        </div>
+        <p class="description">Assessment covering basic drawing commands, editing tools and 2D drafting concepts.</p>
+        <div class="exam-info">
+            <div class="info-box"><small>Exam Date</small><strong>10 Nov 2026</strong></div>
+            <div class="info-box"><small>Time</small><strong>10:00 AM</strong></div>
+            <div class="info-box"><small>Duration</small><strong>60 Minutes</strong></div>
+            <div class="info-box"><small>Maximum Marks</small><strong>50</strong></div>
+        </div>
+        <div class="actions">
+            <button class="btn dark" onclick="showInstructions('AutoCAD Monthly Test')">View Instructions</button>
+        </div>
+    </article>
+
+    <article class="exam-card" data-status="upcoming">
+        <div class="exam-top">
+            <div>
+                <h3>Python Programming Test</h3>
+                <p class="meta">Course: Python Programming · Trainer: Priya Deshmukh</p>
+            </div>
+            <span class="status upcoming">Upcoming</span>
+        </div>
+        <p class="description">Test covering Python variables, data types, conditional statements, loops and functions.</p>
+        <div class="exam-info">
+            <div class="info-box"><small>Exam Date</small><strong>15 Nov 2026</strong></div>
+            <div class="info-box"><small>Time</small><strong>11:00 AM</strong></div>
+            <div class="info-box"><small>Duration</small><strong>90 Minutes</strong></div>
+            <div class="info-box"><small>Maximum Marks</small><strong>100</strong></div>
+        </div>
+        <div class="actions">
+            <button class="btn dark" onclick="showInstructions('Python Programming Test')">View Instructions</button>
+        </div>
+    </article>
+
+    <article class="exam-card" data-status="completed">
+        <div class="exam-top">
+            <div>
+                <h3>Web Development Assessment</h3>
+                <p class="meta">Course: Web Development · Trainer: Neha Joshi</p>
+            </div>
+            <span class="status completed">Completed</span>
+        </div>
+        <p class="description">Assessment on HTML structure, CSS styling and responsive web design.</p>
+        <div class="exam-info">
+            <div class="info-box"><small>Exam Date</small><strong>25 Oct 2026</strong></div>
+            <div class="info-box"><small>Duration</small><strong>60 Minutes</strong></div>
+            <div class="info-box"><small>Maximum Marks</small><strong>50</strong></div>
+            <div class="info-box"><small>Exam Status</small><strong>Submitted</strong></div>
+        </div>
+        <div class="actions">
+            <button class="btn light" onclick="alert('Demo: Result is available in the My Results section.')">View Result</button>
+        </div>
+    </article>
+
+    <article class="exam-card" data-status="missed">
+        <div class="exam-top">
+            <div>
+                <h3>Creo Basic Assessment</h3>
+                <p class="meta">Course: Creo 3D Design · Trainer: Amit Shinde</p>
+            </div>
+            <span class="status missed">Missed</span>
+        </div>
+        <p class="description">Assessment on basic 3D modelling and sketching concepts.</p>
+        <div class="exam-info">
+            <div class="info-box"><small>Exam Date</small><strong>28 Oct 2026</strong></div>
+            <div class="info-box"><small>Duration</small><strong>45 Minutes</strong></div>
+            <div class="info-box"><small>Maximum Marks</small><strong>30</strong></div>
+            <div class="info-box"><small>Exam Status</small><strong>Not Attended</strong></div>
+        </div>
+        <div class="actions">
+            <button class="btn light" onclick="alert('Please contact your trainer or branch manager about a possible re-exam.')">Contact Trainer</button>
+        </div>
+    </article>
+
+</section>
+
+<div class="empty" id="emptyState">
+    <h3>No exams found</h3>
+    <p>There are no exams in this category.</p>
+</div>
+
+<footer class="footer">
+    © 2026 Institute LMS. Sample examination records.
+    <br><br>
+    This is a schedule dashboard, not a live examination system.
+</footer>
+</main>
+</div>
+
+<div class="modal" id="instructionModal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h2>Exam Instructions</h2>
+            <button class="close" onclick="closeInstructions()">✕</button>
+        </div>
+        <h3 id="instructionTitle" style="font-size:14px;margin-bottom:14px"></h3>
+        <ol class="instruction-list">
+            <li>Arrive at the examination venue before the reporting time.</li>
+            <li>Carry your valid institute student ID card.</li>
+            <li>Follow the instructions given by the trainer or invigilator.</li>
+            <li>Do not share your login credentials with anyone.</li>
+            <li>Submit your answer sheet before leaving the examination room.</li>
+            <li>Contact your branch if you need assistance.</li>
+        </ol>
+        <button class="btn dark" style="width:100%;margin-top:18px" onclick="closeInstructions()">Close</button>
+    </div>
+</div>
+
+<script>
+function toggleMenu(){
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("overlay").classList.toggle("show");
+}
+
+function showInstructions(name){
+    document.getElementById("instructionTitle").textContent = name;
+    document.getElementById("instructionModal").classList.add("show");
+}
+
+function closeInstructions(){
+    document.getElementById("instructionModal").classList.remove("show");
+}
+
+const tabs = document.querySelectorAll(".tab");
+const exams = document.querySelectorAll(".exam-card");
+
+tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+
+        const filter = tab.dataset.filter;
+        let visible = 0;
+
+        exams.forEach(exam => {
+            const show = filter === "all" || exam.dataset.status === filter;
+            exam.style.display = show ? "" : "none";
+            if(show) visible++;
+        });
+
+        document.getElementById("emptyState").style.display =
+            visible === 0 ? "block" : "none";
+    });
+});
+
+document.getElementById("totalCount").textContent = exams.length;
+document.getElementById("upcomingCount").textContent =
+    [...exams].filter(e => e.dataset.status === "upcoming").length;
+document.getElementById("completedCount").textContent =
+    [...exams].filter(e => e.dataset.status === "completed").length;
+document.getElementById("missedCount").textContent =
+    [...exams].filter(e => e.dataset.status === "missed").length;
+
+document.getElementById("instructionModal").addEventListener("click", e => {
+    if(e.target.id === "instructionModal") closeInstructions();
+});
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["Student"]));</script>
+</body>
+</html>

@@ -1,0 +1,696 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Attendance | Institute LMS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #111;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            background: #111;
+            color: white;
+            padding: 25px 15px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 19px;
+            font-weight: bold;
+            padding: 0 12px 30px;
+        }
+
+        .brand small {
+            display: block;
+            color: #999;
+            font-size: 11px;
+            margin-top: 7px;
+            font-weight: normal;
+        }
+
+        .nav-label {
+            color: #888;
+            font-size: 10px;
+            padding: 15px 12px 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 13px 12px;
+            color: #bbb;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: white;
+            color: #111;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 75px;
+            background: white;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .topbar h2 {
+            font-size: 19px;
+        }
+
+        .content {
+            max-width: 1350px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .heading {
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            font-size: 26px;
+            margin-bottom: 7px;
+        }
+
+        .heading p {
+            color: #777;
+            font-size: 13px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            align-items: end;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+            font-size: 13px;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            padding: 11px 15px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .primary {
+            background: #111;
+            color: white;
+        }
+
+        .secondary {
+            background: #eee;
+            color: #111;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #eee;
+            padding: 19px;
+            border-radius: 8px;
+        }
+
+        .stat-card p {
+            color: #777;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h2 {
+            font-size: 25px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .table-header h3 {
+            font-size: 16px;
+        }
+
+        .table-header input {
+            max-width: 280px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 11px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        th {
+            background: #fafafa;
+            color: #777;
+        }
+
+        .status-select {
+            min-width: 130px;
+            padding: 9px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 20px;
+        }
+
+        .notice {
+            background: #eee;
+            padding: 13px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+
+        .mobile-menu {
+            display: none;
+            background: none;
+            font-size: 22px;
+        }
+
+        @media(max-width: 850px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media(max-width: 700px) {
+            .sidebar {
+                display: none;
+                position: fixed;
+                z-index: 10;
+                height: 100vh;
+                overflow-y: auto;
+            }
+
+            .sidebar.open {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .content {
+                padding: 17px;
+            }
+        }
+
+        @media(max-width: 500px) {
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 9px;
+            }
+
+            .stat-card {
+                padding: 14px;
+            }
+
+            .stat-card h2 {
+                font-size: 21px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            INSTITUTE LMS
+            <small>TRAINER PANEL</small>
+        </div>
+
+        <div class="nav-label">Main Menu</div>
+
+        <a href="trainer.html" class="nav-link">Dashboard</a>
+        <a href="trainer-students.html" class="nav-link">My Students</a>
+        <a href="trainer-attendance.html" class="nav-link active">Attendance</a>
+        <a href="trainer-assignments.html" class="nav-link">Assignments</a>
+        <a href="trainer-exams.html" class="nav-link">Exams & Results</a>
+
+        <div class="nav-label">Account</div>
+
+        <a href="trainer-settings.html" class="nav-link">My Profile</a>
+        <a href="../pages/login.html" class="nav-link">Logout</a>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div style="display:flex;align-items:center;gap:15px">
+                <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+                <h2>Attendance</h2>
+            </div>
+
+            <span style="font-size:13px">Trainer Panel</span>
+        </header>
+
+        <div class="content">
+
+            <section class="heading">
+                <h1>Student Attendance</h1>
+                <p>Mark and review attendance for your assigned batches.</p>
+            </section>
+
+            <!-- Filters -->
+
+            <section class="panel">
+
+                <div class="filters">
+
+                    <div>
+                        <label>Select Batch</label>
+                        <select id="batchSelect">
+                            <option value="AUT-01">AUT-01 - AutoCAD</option>
+                            <option value="CRE-02">CRE-02 - Creo</option>
+                            <option value="WEB-01">WEB-01 - Web Development</option>
+                            <option value="PY-01">PY-01 - Python</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Attendance Date</label>
+                        <input type="date" id="attendanceDate">
+                    </div>
+
+                    <div>
+                        <label>Attendance Session</label>
+                        <select id="sessionSelect">
+                            <option value="Morning">Morning</option>
+                            <option value="Afternoon">Afternoon</option>
+                            <option value="Evening">Evening</option>
+                        </select>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Summary -->
+
+            <section class="stats">
+
+                <div class="stat-card">
+                    <p>Total Students</p>
+                    <h2 id="totalCount">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Present</p>
+                    <h2 id="presentCount">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Absent</p>
+                    <h2 id="absentCount">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Late / Not Marked</p>
+                    <h2 id="otherCount">0</h2>
+                </div>
+
+            </section>
+
+            <!-- Attendance Table -->
+
+            <section class="panel">
+
+                <div class="table-header">
+                    <h3>Student Attendance List</h3>
+
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Search student..."
+                    >
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Student Name</th>
+                                <th>Course</th>
+                                <th>Batch</th>
+                                <th>Attendance</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="attendanceTable"></tbody>
+                    </table>
+
+                    <p id="emptyMessage"
+                       style="display:none;text-align:center;padding:20px;color:#777">
+                        No students found.
+                    </p>
+
+                </div>
+
+                <div class="actions">
+                    <button class="secondary" onclick="markAllPresent()">
+                        Mark All Present
+                    </button>
+
+                    <button class="secondary" onclick="resetAttendance()">
+                        Reset Marks
+                    </button>
+
+                    <button class="primary" onclick="saveAttendance()">
+                        Save Attendance
+                    </button>
+                </div>
+
+            </section>
+
+            <div class="notice">
+                <strong>Demo mode:</strong> Attendance changes are held in
+                browser memory and are not stored in a database. The final
+                backend must verify trainer-to-batch assignments and prevent
+                unauthorized changes to attendance records.
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+    const students = [
+        { id: "STD1001", name: "Rahul Patil", course: "AutoCAD", batch: "AUT-01" },
+        { id: "STD1002", name: "Priya Sharma", course: "Python", batch: "PY-01" },
+        { id: "STD1003", name: "Amit More", course: "Creo", batch: "CRE-02" },
+        { id: "STD1004", name: "Neha Patil", course: "Web Development", batch: "WEB-01" },
+        { id: "STD1005", name: "Akash Deshmukh", course: "AutoCAD", batch: "AUT-01" },
+        { id: "STD1006", name: "Sneha Joshi", course: "Creo", batch: "CRE-02" },
+        { id: "STD1007", name: "Rohan Jadhav", course: "Python", batch: "PY-01" },
+        { id: "STD1008", name: "Pooja More", course: "Web Development", batch: "WEB-01" }
+    ];
+
+    const attendance = {};
+
+    const batchSelect = document.getElementById("batchSelect");
+    const dateInput = document.getElementById("attendanceDate");
+    const sessionSelect = document.getElementById("sessionSelect");
+    const searchInput = document.getElementById("searchInput");
+    const table = document.getElementById("attendanceTable");
+
+    function getKey(studentId) {
+        return [
+            dateInput.value,
+            sessionSelect.value,
+            batchSelect.value,
+            studentId
+        ].join("|");
+    }
+
+    function getStatus(studentId) {
+        return attendance[getKey(studentId)] || "Not Marked";
+    }
+
+    function setStatus(studentId, status) {
+        attendance[getKey(studentId)] = status;
+        updateSummary();
+    }
+
+    function renderAttendance() {
+        const batch = batchSelect.value;
+        const search = searchInput.value.toLowerCase().trim();
+
+        const filtered = students.filter(student =>
+            student.batch === batch &&
+            (
+                student.name.toLowerCase().includes(search) ||
+                student.id.toLowerCase().includes(search)
+            )
+        );
+
+        table.innerHTML = "";
+
+        filtered.forEach(student => {
+            const row = document.createElement("tr");
+
+            const values = [
+                student.id,
+                student.name,
+                student.course,
+                student.batch
+            ];
+
+            values.forEach(value => {
+                const cell = document.createElement("td");
+                cell.textContent = value;
+                row.appendChild(cell);
+            });
+
+            const statusCell = document.createElement("td");
+            const select = document.createElement("select");
+
+            select.className = "status-select";
+
+            ["Not Marked", "Present", "Absent", "Late"].forEach(status => {
+                const option = document.createElement("option");
+                option.value = status;
+                option.textContent = status;
+                select.appendChild(option);
+            });
+
+            select.value = getStatus(student.id);
+
+            select.addEventListener("change", () => {
+                setStatus(student.id, select.value);
+            });
+
+            statusCell.appendChild(select);
+            row.appendChild(statusCell);
+
+            table.appendChild(row);
+        });
+
+        document.getElementById("emptyMessage").style.display =
+            filtered.length ? "none" : "block";
+
+        updateSummary();
+    }
+
+    function updateSummary() {
+        const batch = batchSelect.value;
+
+        const batchStudents = students.filter(
+            student => student.batch === batch
+        );
+
+        let present = 0;
+        let absent = 0;
+        let late = 0;
+        let notMarked = 0;
+
+        batchStudents.forEach(student => {
+            const status = getStatus(student.id);
+
+            if (status === "Present") present++;
+            else if (status === "Absent") absent++;
+            else if (status === "Late") late++;
+            else notMarked++;
+        });
+
+        document.getElementById("totalCount").textContent =
+            batchStudents.length;
+
+        document.getElementById("presentCount").textContent =
+            present;
+
+        document.getElementById("absentCount").textContent =
+            absent;
+
+        document.getElementById("otherCount").textContent =
+            late + notMarked;
+    }
+
+    function markAllPresent() {
+        students
+            .filter(student => student.batch === batchSelect.value)
+            .forEach(student => {
+                attendance[getKey(student.id)] = "Present";
+            });
+
+        renderAttendance();
+    }
+
+    function resetAttendance() {
+        students
+            .filter(student => student.batch === batchSelect.value)
+            .forEach(student => {
+                delete attendance[getKey(student.id)];
+            });
+
+        renderAttendance();
+    }
+
+    function saveAttendance() {
+        const batchStudents = students.filter(
+            student => student.batch === batchSelect.value
+        );
+
+        const unmarked = batchStudents.filter(
+            student => getStatus(student.id) === "Not Marked"
+        );
+
+        if (unmarked.length > 0) {
+            alert(
+                unmarked.length +
+                " student(s) are not marked. Please complete attendance."
+            );
+            return;
+        }
+
+        const records = batchStudents.map(student => ({
+            studentId: student.id,
+            status: getStatus(student.id)
+        }));
+
+        console.log("Demo attendance records:", {
+            date: dateInput.value,
+            session: sessionSelect.value,
+            batch: batchSelect.value,
+            records
+        });
+
+        alert(
+            "Attendance validated successfully!\n\n" +
+            "Demo only: records are not saved to the database."
+        );
+    }
+
+    function toggleSidebar() {
+        document.getElementById("sidebar")
+            .classList.toggle("open");
+    }
+
+    batchSelect.addEventListener("change", renderAttendance);
+    dateInput.addEventListener("change", renderAttendance);
+    sessionSelect.addEventListener("change", renderAttendance);
+    searchInput.addEventListener("input", renderAttendance);
+
+    const today = new Date();
+    const localDate = [
+        today.getFullYear(),
+        String(today.getMonth() + 1).padStart(2, "0"),
+        String(today.getDate()).padStart(2, "0")
+    ].join("-");
+
+    dateInput.value = localDate;
+
+    renderAttendance();
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["Trainer"]));</script>
+</body>
+</html>

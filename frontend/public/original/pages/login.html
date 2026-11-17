@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | Institute LMS</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: #f7f7f7;
+        }
+
+        .login-page {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .login-left {
+            background: #080808;
+            color: white;
+            padding: 55px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .login-left .logo {
+            color: white;
+        }
+
+        .login-left-content {
+            max-width: 480px;
+            margin: auto;
+        }
+
+        .login-left-content > span {
+            color: #999;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .login-left-content h1 {
+            font-size: clamp(38px, 5vw, 65px);
+            line-height: 1.1;
+            letter-spacing: -3px;
+            margin-top: 20px;
+        }
+
+        .login-left-content h1 span {
+            color: #888;
+        }
+
+        .login-left-content p {
+            color: #aaa;
+            font-size: 13px;
+            line-height: 1.9;
+            margin-top: 20px;
+        }
+
+        .login-left-footer {
+            color: #777;
+            font-size: 10px;
+        }
+
+        .login-right {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 45px 25px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .back-home {
+            display: inline-block;
+            font-size: 11px;
+            color: #777;
+            font-weight: 700;
+            margin-bottom: 35px;
+        }
+
+        .login-box h2 {
+            font-size: 34px;
+            letter-spacing: -1.5px;
+        }
+
+        .login-description {
+            font-size: 12px;
+            color: #777;
+            margin-top: 8px;
+            margin-bottom: 30px;
+        }
+
+        .role-title {
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .role-option {
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: left;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .role-option.active {
+            border: 1.5px solid #080808;
+            background: #f0f0f0;
+        }
+
+        .role-option strong {
+            display: block;
+            font-size: 12px;
+        }
+
+        .role-option small {
+            display: block;
+            font-size: 9px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 17px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 9px;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #080808;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 65px;
+        }
+
+        .show-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            margin-top: -3px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #777;
+        }
+
+        .forgot-link {
+            font-weight: 700;
+        }
+
+        .login-submit {
+            width: 100%;
+            border: none;
+            margin-top: 5px;
+        }
+
+        .login-message {
+            display: none;
+            padding: 12px;
+            background: #eee;
+            border-radius: 8px;
+            font-size: 11px;
+        }
+
+        .login-security {
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+            margin-top: 25px;
+        }
+
+        @media(max-width: 800px) {
+            .login-page {
+                grid-template-columns: 1fr;
+            }
+
+            .login-left {
+                min-height: 260px;
+                padding: 30px;
+            }
+
+            .login-left-content {
+                margin: 55px 0 25px;
+            }
+
+            .login-left-content h1 {
+                font-size: 40px;
+            }
+
+            .login-left-footer {
+                display: none;
+            }
+        }
+
+        @media(max-width: 450px) {
+            .login-right {
+                padding: 35px 20px;
+            }
+
+            .login-box h2 {
+                font-size: 29px;
+            }
+
+            .role-grid {
+                gap: 7px;
+            }
+
+            .role-option {
+                padding: 12px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/premium-public.css">
+</head>
+
+<body>
+
+    <div class="login-page">
+
+        <!-- LEFT PANEL -->
+        <section class="login-left">
+
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">I</span>
+                <span>Institute<span class="logo-light">LMS</span></span>
+            </a>
+
+            <div class="login-left-content">
+
+                <span>WELCOME TO YOUR LEARNING SPACE</span>
+
+                <h1>
+                    Learn More.<br>
+                    Achieve <span>More.</span>
+                </h1>
+
+                <p>
+                    Access your personalized learning dashboard,
+                    manage academic activities and stay connected
+                    with your institute.
+                </p>
+
+            </div>
+
+            <div class="login-left-footer">
+                © 2026 Institute LMS. All rights reserved.
+            </div>
+
+        </section>
+
+
+        <!-- RIGHT PANEL -->
+        <section class="login-right">
+
+            <div class="login-box">
+
+                <a href="../index.html" class="back-home">
+                    ← Back to Home
+                </a>
+
+                <h2>Welcome Back</h2>
+
+                <p class="login-description">
+                    Select your account type and sign in to continue.
+                </p>
+
+
+                <!-- ROLE SELECTOR -->
+                <p class="role-title">SELECT YOUR ROLE</p>
+
+                <div class="role-grid">
+
+                    <button type="button"
+                            class="role-option active"
+                            data-role="business_head">
+
+                        <strong>Business Head</strong>
+                        <small>Central administration</small>
+
+                    </button>
+
+
+                    <button type="button"
+                            class="role-option"
+                            data-role="manager">
+
+                        <strong>Manager</strong>
+                        <small>Branch management</small>
+
+                    </button>
+
+
+                    <button type="button"
+                            class="role-option"
+                            data-role="trainer">
+
+                        <strong>Trainer</strong>
+                        <small>Teaching portal</small>
+
+                    </button>
+
+
+                    <button type="button"
+                            class="role-option"
+                            data-role="student">
+
+                        <strong>Student</strong>
+                        <small>Learning portal</small>
+
+                    </button>
+
+                </div>
+
+
+                <!-- LOGIN FORM -->
+                <form class="login-form" id="loginForm">
+
+                    <input
+                        type="hidden"
+                        id="selectedRole"
+                        name="role"
+                        value="business_head"
+                    >
+
+                    <div class="form-group">
+
+                        <label for="email">Email Address</label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="password">Password</label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="show-password"
+                                id="togglePassword"
+                            >
+                                SHOW
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="login-options">
+
+                        <label class="remember">
+                            <input type="checkbox" id="remember">
+                            Remember me
+                        </label>
+
+                        <a href="#" class="forgot-link" id="forgotPassword">
+                            Forgot password?
+                        </a>
+
+                    </div>
+
+
+                    <div class="login-message" id="loginMessage"></div>
+
+
+                    <button type="submit" id="loginButton" class="btn btn-dark login-submit">
+                        Sign In →
+                    </button>
+
+                </form>
+
+
+                <p class="login-security">
+                    Secure login portal • Authorized users only
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+    <script src="../assets/js/auth.js"></script>
+
+    <!-- LOGIN INTERACTIONS -->
+    <script>
+
+        const roleButtons = document.querySelectorAll(".role-option");
+        const selectedRole = document.getElementById("selectedRole");
+
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+
+        const loginForm = document.getElementById("loginForm");
+        const loginMessage = document.getElementById("loginMessage");
+
+
+        // Select account role
+        roleButtons.forEach(button => {
+
+            button.addEventListener("click", () => {
+
+                roleButtons.forEach(item => {
+                    item.classList.remove("active");
+                });
+
+                button.classList.add("active");
+
+                selectedRole.value = button.dataset.role;
+
+            });
+
+        });
+
+
+        // Show / hide password
+        togglePassword.addEventListener("click", () => {
+
+            if (passwordInput.type === "password") {
+
+                passwordInput.type = "text";
+                togglePassword.textContent = "HIDE";
+
+            } else {
+
+                passwordInput.type = "password";
+                togglePassword.textContent = "SHOW";
+
+            }
+
+        });
+
+
+
+
+        // Forgot password
+        document.getElementById("forgotPassword")
+            .addEventListener("click", function(event) {
+
+                event.preventDefault();
+
+                alert(
+                    "Password recovery will be available after backend integration. Contact your institute administrator."
+                );
+
+            });
+
+    </script>
+
+</body>
+</html>

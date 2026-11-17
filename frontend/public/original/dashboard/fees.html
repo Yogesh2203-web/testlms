@@ -1,0 +1,980 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Management | Institute LMS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #111;
+        }
+
+        .topbar {
+            background: #111;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 1350px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            font-size: 27px;
+            margin-bottom: 7px;
+        }
+
+        .heading p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            padding: 11px 16px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .primary {
+            background: #111;
+            color: white;
+        }
+
+        .secondary {
+            background: #eee;
+            color: #111;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 21px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .stat-card p {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h2 {
+            font-size: 25px;
+        }
+
+        .panel {
+            background: white;
+            padding: 22px;
+            border: 1px solid #eee;
+            border-radius: 9px;
+            margin-bottom: 20px;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            background: white;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 950px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 11px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background: #f8f8f8;
+            color: #666;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            background: #eee;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .view-btn {
+            background: #eee;
+        }
+
+        .receipt-btn {
+            background: #111;
+            color: white;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+        /* Modal */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.6);
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            z-index: 100;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 9px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            background: #eee;
+            font-size: 18px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 5px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .summary {
+            background: #f5f5f5;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 13px;
+            line-height: 2;
+        }
+
+        .notice {
+            background: #eee;
+            padding: 13px;
+            border-radius: 6px;
+            color: #555;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        @media(max-width: 900px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media(max-width: 600px) {
+            .container {
+                padding: 16px;
+            }
+
+            .heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .stats, .filters, .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .topbar {
+                padding: 17px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <h2>INSTITUTE LMS</h2>
+    <a href="business-head.html">← Back to Dashboard</a>
+</header>
+
+<main class="container">
+
+    <section class="heading">
+        <div>
+            <h1>Fee Management</h1>
+            <p>Manage student payments, pending balances and fee records.</p>
+        </div>
+
+        <button class="primary" onclick="openPaymentModal()">
+            + Record Payment
+        </button>
+    </section>
+
+    <!-- Statistics -->
+
+    <section class="stats">
+
+        <div class="stat-card">
+            <p>Total Course Fees</p>
+            <h2 id="totalFees">₹45,000</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Total Collected</p>
+            <h2 id="totalCollected">₹20,000</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Pending Amount</p>
+            <h2 id="totalPending">₹25,000</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Total Transactions</p>
+            <h2 id="totalTransactions">3</h2>
+        </div>
+
+    </section>
+
+    <!-- Payment Records -->
+
+    <section class="panel">
+
+        <h3 style="margin-bottom:20px;">Student Fee Records</h3>
+
+        <div class="filters">
+
+            <input
+                type="search"
+                id="searchInput"
+                placeholder="Search student name or ID..."
+                oninput="renderPayments()"
+            >
+
+            <select id="branchFilter" onchange="renderPayments()">
+                <option value="">All Branches</option>
+                <option>Main Branch</option>
+                <option>Branch 02</option>
+                <option>Branch 03</option>
+            </select>
+
+            <select id="modeFilter" onchange="renderPayments()">
+                <option value="">All Payment Modes</option>
+                <option>UPI</option>
+                <option>Cash</option>
+                <option>Bank Transfer</option>
+                <option>Card</option>
+            </select>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Course</th>
+                        <th>Branch</th>
+                        <th>Total Fees</th>
+                        <th>Paid</th>
+                        <th>Balance</th>
+                        <th>Last Payment Mode</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="paymentTable"></tbody>
+            </table>
+
+        </div>
+
+        <div class="empty" id="emptyMessage" hidden>
+            No student fee records found.
+        </div>
+
+    </section>
+
+    <div class="notice">
+        <strong>Demo mode:</strong> Payments entered here are temporary
+        browser data. This page does not verify bank transfers or UPI
+        transactions. In production, payments must be recorded only after
+        authorized verification and stored in PostgreSQL with an audit trail.
+    </div>
+
+</main>
+
+<!-- Payment Modal -->
+
+<div class="modal" id="paymentModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>Record Student Payment</h2>
+            <button class="close" onclick="closePaymentModal()">×</button>
+        </div>
+
+        <form id="paymentForm">
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+                    <label>Select Student *</label>
+                    <select id="paymentStudent" required>
+                        <option value="">Select Student</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Payment Date *</label>
+                    <input type="date" id="paymentDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Amount Received (₹) *</label>
+                    <input
+                        type="number"
+                        id="paymentAmount"
+                        min="0.01"
+                        step="0.01"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Payment Mode *</label>
+                    <select id="paymentMode" required>
+                        <option value="">Select Mode</option>
+                        <option>UPI</option>
+                        <option>Cash</option>
+                        <option>Bank Transfer</option>
+                        <option>Card</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Transaction Reference</label>
+                    <input
+                        type="text"
+                        id="paymentReference"
+                        placeholder="Enter reference number"
+                    >
+                </div>
+
+            </div>
+
+            <div class="summary" id="paymentSummary">
+                Select a student to view fee balance.
+            </div>
+
+            <div class="form-actions">
+                <button
+                    type="button"
+                    class="secondary"
+                    onclick="closePaymentModal()"
+                >
+                    Cancel
+                </button>
+
+                <button type="submit" class="primary">
+                    Save Payment
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- Payment History Modal -->
+
+<div class="modal" id="historyModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>Payment History</h2>
+            <button class="close" onclick="closeHistory()">×</button>
+        </div>
+
+        <div id="historyContent"></div>
+
+        <div class="form-actions">
+            <button class="primary" onclick="closeHistory()">Close</button>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    let students = [
+        {
+            id: "STU001",
+            name: "Rahul Sharma",
+            course: "AutoCAD",
+            branch: "Main Branch",
+            totalFees: 15000,
+            payments: [
+                {
+                    receipt: "FEE001",
+                    date: "2026-10-20",
+                    amount: 5000,
+                    mode: "UPI",
+                    reference: "DEMO123"
+                }
+            ]
+        },
+        {
+            id: "STU002",
+            name: "Priya Patil",
+            course: "Python",
+            branch: "Branch 02",
+            totalFees: 12000,
+            payments: [
+                {
+                    receipt: "FEE002",
+                    date: "2026-10-22",
+                    amount: 10000,
+                    mode: "Cash",
+                    reference: ""
+                }
+            ]
+        },
+        {
+            id: "STU003",
+            name: "Amit Deshmukh",
+            course: "CATIA",
+            branch: "Branch 03",
+            totalFees: 18000,
+            payments: [
+                {
+                    receipt: "FEE003",
+                    date: "2026-10-25",
+                    amount: 5000,
+                    mode: "Bank Transfer",
+                    reference: "DEMO456"
+                }
+            ]
+        }
+    ];
+
+    const paymentModal = document.getElementById("paymentModal");
+    const historyModal = document.getElementById("historyModal");
+    const paymentForm = document.getElementById("paymentForm");
+
+    function money(value) {
+        return "₹" + Number(value).toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function getPaid(student) {
+        return student.payments.reduce(
+            (sum, payment) => sum + Number(payment.amount), 0
+        );
+    }
+
+    function getBalance(student) {
+        return Math.max(0, student.totalFees - getPaid(student));
+    }
+
+    function getLastMode(student) {
+        const last = student.payments[student.payments.length - 1];
+        return last ? last.mode : "Not Paid";
+    }
+
+    function renderPayments() {
+        const table = document.getElementById("paymentTable");
+
+        const search = document.getElementById("searchInput")
+            .value.toLowerCase();
+
+        const branch = document.getElementById("branchFilter").value;
+        const mode = document.getElementById("modeFilter").value;
+
+        table.innerHTML = "";
+
+        const filtered = students
+            .map((student, index) => ({ student, index }))
+            .filter(({ student }) => {
+                const matchesSearch =
+                    student.id.toLowerCase().includes(search) ||
+                    student.name.toLowerCase().includes(search);
+
+                const matchesMode =
+                    !mode || student.payments.some(p => p.mode === mode);
+
+                return matchesSearch &&
+                    (!branch || student.branch === branch) &&
+                    matchesMode;
+            });
+
+        filtered.forEach(({ student, index }) => {
+            const row = document.createElement("tr");
+
+            const values = [
+                student.id,
+                student.name,
+                student.course,
+                student.branch,
+                money(student.totalFees),
+                money(getPaid(student)),
+                money(getBalance(student)),
+                getLastMode(student)
+            ];
+
+            values.forEach(value => {
+                const cell = document.createElement("td");
+                cell.textContent = value;
+                row.appendChild(cell);
+            });
+
+            const actionCell = document.createElement("td");
+            const actions = document.createElement("div");
+            actions.className = "actions";
+
+            const historyButton = document.createElement("button");
+            historyButton.className = "view-btn";
+            historyButton.textContent = "History";
+            historyButton.onclick = () => showHistory(index);
+
+            const receiptButton = document.createElement("button");
+            receiptButton.className = "receipt-btn";
+            receiptButton.textContent = "Receipt";
+            receiptButton.onclick = () => printReceipt(index);
+
+            actions.append(historyButton, receiptButton);
+            actionCell.appendChild(actions);
+            row.appendChild(actionCell);
+
+            table.appendChild(row);
+        });
+
+        document.getElementById("emptyMessage").hidden =
+            filtered.length !== 0;
+
+        updateStats();
+    }
+
+    function updateStats() {
+        const totalFees = students.reduce(
+            (sum, student) => sum + student.totalFees, 0
+        );
+
+        const totalCollected = students.reduce(
+            (sum, student) => sum + getPaid(student), 0
+        );
+
+        const transactions = students.reduce(
+            (sum, student) => sum + student.payments.length, 0
+        );
+
+        document.getElementById("totalFees").textContent =
+            money(totalFees);
+
+        document.getElementById("totalCollected").textContent =
+            money(totalCollected);
+
+        document.getElementById("totalPending").textContent =
+            money(Math.max(0, totalFees - totalCollected));
+
+        document.getElementById("totalTransactions").textContent =
+            transactions;
+    }
+
+    function populateStudentOptions() {
+        const select = document.getElementById("paymentStudent");
+        select.innerHTML = '<option value="">Select Student</option>';
+
+        students.forEach((student, index) => {
+            const option = document.createElement("option");
+            option.value = index;
+            option.textContent = student.id + " - " + student.name;
+            select.appendChild(option);
+        });
+    }
+
+    function openPaymentModal() {
+        paymentForm.reset();
+        populateStudentOptions();
+
+        const today = new Date();
+        document.getElementById("paymentDate").value = [
+            today.getFullYear(),
+            String(today.getMonth() + 1).padStart(2, "0"),
+            String(today.getDate()).padStart(2, "0")
+        ].join("-");
+
+        document.getElementById("paymentSummary").textContent =
+            "Select a student to view fee balance.";
+
+        paymentModal.classList.add("show");
+    }
+
+    function closePaymentModal() {
+        paymentModal.classList.remove("show");
+    }
+
+    document.getElementById("paymentStudent")
+        .addEventListener("change", function() {
+            const index = this.value;
+
+            if (index === "") return;
+
+            const student = students[Number(index)];
+
+            document.getElementById("paymentSummary").textContent =
+                "Student: " + student.name +
+                " | Total fees: " + money(student.totalFees) +
+                " | Paid: " + money(getPaid(student)) +
+                " | Remaining: " + money(getBalance(student));
+        });
+
+    paymentForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const index = document.getElementById("paymentStudent").value;
+        const amount = Number(
+            document.getElementById("paymentAmount").value
+        );
+
+        if (index === "" || !Number.isFinite(amount) || amount <= 0) {
+            alert("Select a student and enter a valid payment amount.");
+            return;
+        }
+
+        const student = students[Number(index)];
+        const balance = getBalance(student);
+
+        if (balance <= 0) {
+            alert("This student's course fees are already fully paid.");
+            return;
+        }
+
+        if (amount > balance) {
+            alert("Payment cannot exceed the remaining balance of " +
+                money(balance));
+            return;
+        }
+
+        const payment = {
+            receipt: "FEE" + String(Date.now()).slice(-8),
+            date: document.getElementById("paymentDate").value,
+            amount: amount,
+            mode: document.getElementById("paymentMode").value,
+            reference: document.getElementById("paymentReference").value.trim()
+        };
+
+        if (!payment.date || !payment.mode) {
+            alert("Complete all required payment fields.");
+            return;
+        }
+
+        student.payments.push(payment);
+
+        renderPayments();
+        closePaymentModal();
+
+        alert("Demo payment entry created. It has not been verified or saved to a database.");
+    });
+
+    function showHistory(index) {
+        const student = students[index];
+        const content = document.getElementById("historyContent");
+
+        content.replaceChildren();
+
+        const heading = document.createElement("p");
+        heading.textContent =
+            student.name + " (" + student.id + ")";
+        heading.style.marginBottom = "15px";
+        heading.style.fontWeight = "bold";
+
+        content.appendChild(heading);
+
+        if (!student.payments.length) {
+            const empty = document.createElement("p");
+            empty.textContent = "No payment records available.";
+            content.appendChild(empty);
+        } else {
+            const table = document.createElement("table");
+            table.style.minWidth = "0";
+
+            const header = document.createElement("tr");
+
+            ["Receipt", "Date", "Amount", "Mode", "Reference"]
+                .forEach(label => {
+                    const th = document.createElement("th");
+                    th.textContent = label;
+                    header.appendChild(th);
+                });
+
+            table.appendChild(header);
+
+            student.payments.forEach(payment => {
+                const row = document.createElement("tr");
+
+                [
+                    payment.receipt,
+                    payment.date,
+                    money(payment.amount),
+                    payment.mode,
+                    payment.reference || "-"
+                ].forEach(value => {
+                    const cell = document.createElement("td");
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+
+                table.appendChild(row);
+            });
+
+            content.appendChild(table);
+        }
+
+        historyModal.classList.add("show");
+    }
+
+    function closeHistory() {
+        historyModal.classList.remove("show");
+    }
+
+    function printReceipt(index) {
+        const student = students[index];
+        const payment = student.payments[student.payments.length - 1];
+
+        if (!payment) {
+            alert("No payment has been recorded for this student.");
+            return;
+        }
+
+        const previousPaid = getPaid(student) - payment.amount;
+        const balance = getBalance(student);
+
+        const printWindow = window.open("", "_blank");
+
+        if (!printWindow) {
+            alert("Please allow pop-ups to print the receipt.");
+            return;
+        }
+
+        const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[char]);
+
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Fee Receipt - ${escapeHTML(payment.receipt)}</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        padding: 35px;
+                        color: #111;
+                    }
+                    .receipt {
+                        max-width: 700px;
+                        margin: auto;
+                        border: 1px solid #ccc;
+                        padding: 30px;
+                    }
+                    h1, h2 { text-align: center; }
+                    h1 { font-size: 25px; }
+                    h2 { margin: 25px 0; }
+                    p { margin: 12px 0; }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 20px;
+                    }
+                    th, td {
+                        border: 1px solid #ccc;
+                        padding: 12px;
+                        text-align: left;
+                    }
+                    .note {
+                        margin-top: 25px;
+                        font-size: 12px;
+                        color: #666;
+                    }
+                    @media print {
+                        @page { size: A4; margin: 15mm; }
+                    }
+                </style>
+</head>
+            <body>
+                <div class="receipt">
+                    <h1>Institute Name</h1>
+                    <p style="text-align:center;">
+                        Institute Address | Contact: +91 00000 00000
+                    </p>
+                    <h2>FEE PAYMENT RECEIPT</h2>
+
+                    <p><strong>Receipt No:</strong> ${escapeHTML(payment.receipt)}</p>
+                    <p><strong>Student ID:</strong> ${escapeHTML(student.id)}</p>
+                    <p><strong>Student Name:</strong> ${escapeHTML(student.name)}</p>
+                    <p><strong>Course:</strong> ${escapeHTML(student.course)}</p>
+                    <p><strong>Branch:</strong> ${escapeHTML(student.branch)}</p>
+                    <p><strong>Payment Date:</strong> ${escapeHTML(payment.date)}</p>
+                    <p><strong>Payment Mode:</strong> ${escapeHTML(payment.mode)}</p>
+                    <p><strong>Reference:</strong> ${escapeHTML(payment.reference || "-")}</p>
+
+                    <table>
+                        <tr><th>Description</th><th>Amount</th></tr>
+                        <tr><td>Course Fee Payment</td><td>${money(payment.amount)}</td></tr>
+                    </table>
+
+                    <p><strong>Total Course Fees:</strong> ${money(student.totalFees)}</p>
+                    <p><strong>Previous Amount Paid:</strong> ${money(previousPaid)}</p>
+                    <p><strong>Amount Received:</strong> ${money(payment.amount)}</p>
+                    <p><strong>Remaining Balance:</strong> ${money(balance)}</p>
+
+                    <p class="note">
+                        DEMONSTRATION RECEIPT ONLY. This printout does not
+                        independently verify that funds were received.
+                        Official receipts must be generated from verified
+                        payment records.
+                    </p>
+
+                    <br><br>
+                    <p style="text-align:right;">Authorized Signature</p>
+                </div>
+
+                <script>
+                    window.onload = function() {
+                        window.print();
+                    };
+                <\/script>
+            </body>
+            </html>
+        `);
+
+        printWindow.document.close();
+    }
+
+    renderPayments();
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["BusinessHead", "Manager"]));</script>
+</body>
+</html>

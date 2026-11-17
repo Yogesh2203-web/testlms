@@ -1,0 +1,794 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | Institute LMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #171717;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111;
+            color: white;
+            padding: 25px 18px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: 800;
+            padding: 5px 10px 30px;
+        }
+
+        .brand span {
+            color: #aaa;
+        }
+
+        .nav-label {
+            color: #777;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 15px 10px 10px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px;
+            margin-bottom: 5px;
+            border-radius: 9px;
+            text-decoration: none;
+            color: #aaa;
+            font-size: 13px;
+            transition: .2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #292929;
+            color: white;
+        }
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 28px;
+        }
+
+        .topbar h1 {
+            font-size: 25px;
+            margin-bottom: 5px;
+        }
+
+        .topbar p {
+            font-size: 13px;
+            color: #777;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #171717;
+            color: white;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+        }
+
+        .profile small {
+            color: #888;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .welcome {
+            background: #111;
+            color: white;
+            border-radius: 16px;
+            padding: 27px;
+            margin-bottom: 24px;
+        }
+
+        .welcome h2 {
+            font-size: 22px;
+            margin-bottom: 9px;
+        }
+
+        .welcome p {
+            color: #bbb;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card,
+        .panel,
+        .course-card {
+            background: white;
+            border: 1px solid #eaeaea;
+            border-radius: 13px;
+        }
+
+        .stat-card {
+            padding: 20px;
+        }
+
+        .stat-card small {
+            color: #777;
+            font-size: 12px;
+        }
+
+        .stat-card h2 {
+            font-size: 25px;
+            margin-top: 10px;
+        }
+
+        .stat-card p {
+            font-size: 11px;
+            color: #888;
+            margin-top: 7px;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .section-heading h2 {
+            font-size: 17px;
+        }
+
+        .section-heading a {
+            font-size: 12px;
+            color: #111;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .course-card {
+            padding: 19px;
+        }
+
+        .course-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: #111;
+            color: white;
+            display: grid;
+            place-items: center;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .course-card h3 {
+            font-size: 15px;
+            margin-bottom: 7px;
+        }
+
+        .course-card p {
+            color: #888;
+            font-size: 11px;
+            margin-bottom: 15px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        .progress {
+            height: 6px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress span {
+            display: block;
+            height: 100%;
+            background: #111;
+            border-radius: 10px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .panel {
+            padding: 20px;
+            min-width: 0;
+        }
+
+        .panel-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 17px;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item h4 {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .list-item p {
+            color: #888;
+            font-size: 11px;
+        }
+
+        .status {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 6px 9px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .pending {
+            background: #fff2d9;
+            color: #946000;
+        }
+
+        .completed {
+            background: #e5f5e9;
+            color: #23733b;
+        }
+
+        .upcoming {
+            background: #e9efff;
+            color: #3454a1;
+        }
+
+        .attendance-box {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .attendance-circle {
+            width: 105px;
+            height: 105px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: conic-gradient(#111 85%, #e8e8e8 85%);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .attendance-circle::before {
+            content: "";
+            position: absolute;
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .attendance-circle strong {
+            position: relative;
+            font-size: 20px;
+        }
+
+        .attendance-details p {
+            font-size: 12px;
+            color: #777;
+            margin: 8px 0;
+        }
+
+        .fee-summary {
+            display: flex;
+            justify-content: space-between;
+            padding: 11px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 12px;
+        }
+
+        .fee-summary strong {
+            font-size: 13px;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 13px;
+            margin-bottom: 25px;
+        }
+
+        .quick-link {
+            background: white;
+            border: 1px solid #eaeaea;
+            padding: 18px 12px;
+            text-align: center;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #111;
+            transition: .2s;
+        }
+
+        .quick-link:hover {
+            background: #111;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .quick-link .symbol {
+            font-size: 21px;
+            margin-bottom: 9px;
+        }
+
+        .quick-link h4 {
+            font-size: 12px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            font-size: 11px;
+            padding: 20px 0 5px;
+        }
+
+        .menu-btn {
+            display: none;
+            border: none;
+            background: #111;
+            color: white;
+            padding: 9px 12px;
+            border-radius: 7px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+        }
+
+        @media(max-width: 1100px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .course-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 800px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: .3s;
+                z-index: 20;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .overlay.show {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: #0008;
+                z-index: 10;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .topbar {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .profile {
+                margin-left: auto;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 550px) {
+            .main {
+                padding: 15px;
+            }
+
+            .topbar h1 {
+                font-size: 20px;
+            }
+
+            .profile-info {
+                display: none;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 14px;
+            }
+
+            .stat-card h2 {
+                font-size: 21px;
+            }
+
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-links {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .welcome {
+                padding: 20px;
+            }
+
+            .attendance-box {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">INSTITUTE <span>LMS</span></div>
+
+        <div class="nav-label">Student Menu</div>
+        <a href="student.html" class="nav-link active">▦ Dashboard</a>
+        <a href="student-courses.html" class="nav-link">▣ My Courses</a>
+        <a href="student-assignments.html" class="nav-link">✎ Assignments</a>
+        <a href="student-exams.html" class="nav-link">▤ Exams</a>
+        <a href="student-results.html" class="nav-link">★ Results</a>
+        <a href="student-attendance.html" class="nav-link">◷ Attendance</a>
+        <a href="student-fees.html" class="nav-link">₹ Fees & Receipts</a>
+        <a href="student-learning.html" class="nav-link">▶ Learning Resources</a>
+
+        <div class="nav-label">Account</div>
+        <a href="student-profile.html" class="nav-link">♙ My Profile</a>
+        <a href="../pages/login.html" class="nav-link">↪ Logout</a>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+            <div>
+                <h1>Student Dashboard</h1>
+                <p>Welcome to your learning portal.</p>
+            </div>
+
+            <div class="profile">
+                <div class="avatar">ST</div>
+                <div class="profile-info">
+                    <strong>Student Name</strong>
+                    <small>Student ID: STU-2026-001</small>
+                </div>
+            </div>
+        </header>
+
+        <section class="welcome">
+            <h2>Hello, Student! 👋</h2>
+            <p>
+                Keep learning, complete your assignments and stay updated
+                with your courses. Your academic progress starts here.
+            </p>
+        </section>
+
+        <section class="stats">
+            <div class="stat-card">
+                <small>Enrolled Courses</small>
+                <h2>03</h2>
+                <p>Currently active</p>
+            </div>
+
+            <div class="stat-card">
+                <small>Attendance</small>
+                <h2>85%</h2>
+                <p>Overall attendance</p>
+            </div>
+
+            <div class="stat-card">
+                <small>Assignments</small>
+                <h2>04</h2>
+                <p>Pending submissions</p>
+            </div>
+
+            <div class="stat-card">
+                <small>Upcoming Exams</small>
+                <h2>02</h2>
+                <p>Scheduled exams</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-heading">
+                <h2>My Courses</h2>
+                <a href="student-courses.html">View All →</a>
+            </div>
+
+            <div class="course-grid">
+
+                <div class="course-card">
+                    <div class="course-icon">AC</div>
+                    <h3>AutoCAD Professional</h3>
+                    <p>Trainer: Trainer Name</p>
+                    <div class="progress-info">
+                        <span>Course Progress</span>
+                        <strong>75%</strong>
+                    </div>
+                    <div class="progress">
+                        <span style="width:75%"></span>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-icon">3D</div>
+                    <h3>Creo 3D Design</h3>
+                    <p>Trainer: Trainer Name</p>
+                    <div class="progress-info">
+                        <span>Course Progress</span>
+                        <strong>45%</strong>
+                    </div>
+                    <div class="progress">
+                        <span style="width:45%"></span>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-icon">PY</div>
+                    <h3>Python Programming</h3>
+                    <p>Trainer: Trainer Name</p>
+                    <div class="progress-info">
+                        <span>Course Progress</span>
+                        <strong>60%</strong>
+                    </div>
+                    <div class="progress">
+                        <span style="width:60%"></span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="content-grid">
+
+            <section class="panel">
+                <div class="section-heading">
+                    <h2>Recent Assignments</h2>
+                    <a href="student-assignments.html">View All →</a>
+                </div>
+
+                <div class="list-item">
+                    <div>
+                        <h4>AutoCAD Drawing Practice</h4>
+                        <p>Due: 05 November 2026</p>
+                    </div>
+                    <span class="status pending">Pending</span>
+                </div>
+
+                <div class="list-item">
+                    <div>
+                        <h4>Python Basic Programs</h4>
+                        <p>Due: 08 November 2026</p>
+                    </div>
+                    <span class="status upcoming">Upcoming</span>
+                </div>
+
+                <div class="list-item">
+                    <div>
+                        <h4>Creo 3D Model</h4>
+                        <p>Submitted successfully</p>
+                    </div>
+                    <span class="status completed">Submitted</span>
+                </div>
+            </section>
+
+            <section class="panel">
+                <h3 class="panel-title">Attendance Overview</h3>
+
+                <div class="attendance-box">
+                    <div class="attendance-circle">
+                        <strong>85%</strong>
+                    </div>
+
+                    <div class="attendance-details">
+                        <p>Present: <strong>34 Days</strong></p>
+                        <p>Absent: <strong>6 Days</strong></p>
+                        <p>Late: <strong>2 Days</strong></p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <div class="content-grid">
+
+            <section class="panel">
+                <div class="section-heading">
+                    <h2>Upcoming Exams</h2>
+                    <a href="student-exams.html">View All →</a>
+                </div>
+
+                <div class="list-item">
+                    <div>
+                        <h4>AutoCAD Monthly Test</h4>
+                        <p>10 November 2026 · 10:00 AM</p>
+                    </div>
+                    <span class="status upcoming">Upcoming</span>
+                </div>
+
+                <div class="list-item">
+                    <div>
+                        <h4>Python Programming Test</h4>
+                        <p>15 November 2026 · 11:00 AM</p>
+                    </div>
+                    <span class="status upcoming">Upcoming</span>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="section-heading">
+                    <h2>Fee Summary</h2>
+                    <a href="student-fees.html">Details →</a>
+                </div>
+
+                <div class="fee-summary">
+                    <span>Total Course Fees</span>
+                    <strong>₹15,000</strong>
+                </div>
+
+                <div class="fee-summary">
+                    <span>Paid Amount</span>
+                    <strong>₹10,000</strong>
+                </div>
+
+                <div class="fee-summary">
+                    <span>Pending Amount</span>
+                    <strong>₹5,000</strong>
+                </div>
+            </section>
+
+        </div>
+
+        <section>
+            <div class="section-heading">
+                <h2>Quick Access</h2>
+            </div>
+
+            <div class="quick-links">
+                <a href="student-courses.html" class="quick-link">
+                    <div class="symbol">▣</div>
+                    <h4>My Courses</h4>
+                </a>
+
+                <a href="student-assignments.html" class="quick-link">
+                    <div class="symbol">✎</div>
+                    <h4>Assignments</h4>
+                </a>
+
+                <a href="student-results.html" class="quick-link">
+                    <div class="symbol">★</div>
+                    <h4>My Results</h4>
+                </a>
+
+                <a href="student-learning.html" class="quick-link">
+                    <div class="symbol">▶</div>
+                    <h4>Learning</h4>
+                </a>
+            </div>
+        </section>
+
+        <footer class="footer">
+            © 2026 Institute LMS. Student Learning Portal.
+            <br><br>
+            Sample dashboard data — connect Flask and PostgreSQL
+            before using this portal with real student records.
+        </footer>
+
+    </main>
+</div>
+
+<script>
+    function toggleMenu() {
+        document.getElementById("sidebar").classList.toggle("open");
+        document.getElementById("overlay").classList.toggle("show");
+    }
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["Student"]));</script>
+</body>
+</html>

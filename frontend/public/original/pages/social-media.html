@@ -1,0 +1,534 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Social Media | Institute LMS</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        .social-hero {
+            background: #080808;
+            color: white;
+            text-align: center;
+            padding: 90px 0;
+        }
+
+        .social-hero span {
+            color: #999;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .social-hero h1 {
+            font-size: clamp(38px, 6vw, 60px);
+            letter-spacing: -3px;
+            margin-top: 15px;
+        }
+
+        .social-hero p {
+            color: #aaa;
+            font-size: 14px;
+            max-width: 600px;
+            margin: 15px auto 0;
+            line-height: 1.9;
+        }
+
+        .social-section {
+            padding: 85px 0;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .social-card {
+            padding: 32px;
+            border: 1px solid #e8e8e8;
+            border-radius: 16px;
+            transition: 0.3s;
+        }
+
+        .social-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.07);
+        }
+
+        .social-icon {
+            width: 58px;
+            height: 58px;
+            background: #080808;
+            color: white;
+            display: grid;
+            place-items: center;
+            border-radius: 15px;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .social-card h3 {
+            font-size: 21px;
+            margin-top: 25px;
+        }
+
+        .social-card p {
+            color: #777;
+            font-size: 12px;
+            line-height: 1.8;
+            margin: 12px 0 22px;
+        }
+
+        .social-link {
+            font-size: 11px;
+            font-weight: 800;
+            border-bottom: 1px solid #222;
+            padding-bottom: 5px;
+        }
+
+        .updates-section {
+            background: #f7f7f7;
+            padding: 85px 0;
+        }
+
+        .updates-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .update-card {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 15px;
+            padding: 28px;
+        }
+
+        .update-date {
+            font-size: 10px;
+            font-weight: 800;
+            color: #999;
+            letter-spacing: 1px;
+        }
+
+        .update-card h3 {
+            font-size: 19px;
+            margin-top: 15px;
+        }
+
+        .update-card p {
+            font-size: 12px;
+            color: #777;
+            line-height: 1.8;
+            margin-top: 10px;
+        }
+
+        .social-note {
+            margin-top: 30px;
+            color: #777;
+            font-size: 11px;
+        }
+
+        @media(max-width: 750px) {
+            .social-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .updates-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 500px) {
+            .social-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/premium-public.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="container nav-content">
+
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">I</span>
+                <span>Institute<span class="logo-light">LMS</span></span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="../index.html">Home</a>
+                <a href="courses.html">Courses</a>
+                <a href="about.html">About Us</a>
+                <a href="career.html">Career</a>
+                <a href="social-media.html" class="active">Social Media</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <a href="login.html" class="btn btn-dark login-btn">
+                Login ↗
+            </a>
+
+        </div>
+    </header>
+
+
+    <!-- HERO -->
+    <section class="social-hero">
+
+        <div class="container">
+
+            <span>STAY CONNECTED</span>
+
+            <h1>Connect With Us</h1>
+
+            <p>
+                Follow our official social media channels for institute
+                announcements, course information and learning updates.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- SOCIAL MEDIA LINKS -->
+    <section class="social-section">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">FOLLOW OUR CHANNELS</span>
+
+                    <h2>Find Us Online</h2>
+
+                    <p>
+                        Stay connected with our institute community.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="social-grid">
+
+
+                <!-- INSTAGRAM -->
+                <div class="social-card">
+
+                    <div class="social-icon">IG</div>
+
+                    <h3>Instagram</h3>
+
+                    <p>
+                        Explore institute activities, course highlights,
+                        student projects and announcements.
+                    </p>
+
+                    <a href="#" class="social-link"
+                       data-platform="Instagram">
+                        Visit Instagram →
+                    </a>
+
+                </div>
+
+
+                <!-- FACEBOOK -->
+                <div class="social-card">
+
+                    <div class="social-icon">f</div>
+
+                    <h3>Facebook</h3>
+
+                    <p>
+                        Follow institute news, events, admission updates
+                        and educational information.
+                    </p>
+
+                    <a href="#" class="social-link"
+                       data-platform="Facebook">
+                        Visit Facebook →
+                    </a>
+
+                </div>
+
+
+                <!-- YOUTUBE -->
+                <div class="social-card">
+
+                    <div class="social-icon">YT</div>
+
+                    <h3>YouTube</h3>
+
+                    <p>
+                        Watch educational videos, tutorials,
+                        demonstrations and course-related content.
+                    </p>
+
+                    <a href="#" class="social-link"
+                       data-platform="YouTube">
+                        Visit YouTube →
+                    </a>
+
+                </div>
+
+
+                <!-- LINKEDIN -->
+                <div class="social-card">
+
+                    <div class="social-icon">in</div>
+
+                    <h3>LinkedIn</h3>
+
+                    <p>
+                        Connect with our professional community
+                        and explore career-related updates.
+                    </p>
+
+                    <a href="#" class="social-link"
+                       data-platform="LinkedIn">
+                        Visit LinkedIn →
+                    </a>
+
+                </div>
+
+
+                <!-- WHATSAPP -->
+                <div class="social-card">
+
+                    <div class="social-icon">WA</div>
+
+                    <h3>WhatsApp</h3>
+
+                    <p>
+                        Contact our institute team for admission
+                        enquiries and course information.
+                    </p>
+
+                    <a href="#" class="social-link"
+                       data-platform="WhatsApp">
+                        Contact on WhatsApp →
+                    </a>
+
+                </div>
+
+
+                <!-- TELEGRAM -->
+                <div class="social-card">
+
+                    <div class="social-icon">TG</div>
+
+                    <h3>Telegram</h3>
+
+                    <p>
+                        Receive learning updates, important notices
+                        and educational announcements.
+                    </p>
+
+                    <a href="#" class="social-link"
+                       data-platform="Telegram">
+                        Join Telegram →
+                    </a>
+
+                </div>
+
+            </div>
+
+            <p class="social-note">
+                Note: Replace the placeholder links with your institute's
+                official social media URLs before publishing.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- UPDATES -->
+    <section class="updates-section">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">LATEST INFORMATION</span>
+
+                    <h2>Institute Updates</h2>
+
+                    <p>
+                        Important information for students and visitors.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="updates-grid">
+
+                <article class="update-card">
+
+                    <span class="update-date">ADMISSIONS</span>
+
+                    <h3>Course Enquiry and Admissions</h3>
+
+                    <p>
+                        Interested students can submit an enquiry
+                        through our admission page to receive
+                        course-related information.
+                    </p>
+
+                </article>
+
+
+                <article class="update-card">
+
+                    <span class="update-date">LEARNING</span>
+
+                    <h3>Learning Resources</h3>
+
+                    <p>
+                        Students can use the learning portal to access
+                        available academic resources and course updates.
+                    </p>
+
+                </article>
+
+
+                <article class="update-card">
+
+                    <span class="update-date">CAREER</span>
+
+                    <h3>Career Opportunities</h3>
+
+                    <p>
+                        Visit our career page to learn about
+                        opportunities and submit an application.
+                    </p>
+
+                </article>
+
+
+                <article class="update-card">
+
+                    <span class="update-date">SUPPORT</span>
+
+                    <h3>Need Assistance?</h3>
+
+                    <p>
+                        Contact the institute team for assistance
+                        with courses, admissions and general enquiries.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CTA -->
+    <section class="cta-section">
+
+        <div class="container cta-content">
+
+            <div>
+                <span class="section-label">STAY IN TOUCH</span>
+
+                <h2>Let's Stay Connected.</h2>
+
+                <p>
+                    Have a question? Our team is ready to help.
+                </p>
+            </div>
+
+            <a href="contact.html" class="btn btn-light">
+                Contact Us →
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="container footer-content">
+
+            <div>
+
+                <a href="../index.html" class="logo footer-logo">
+                    <span class="logo-icon">I</span>
+                    <span>Institute<span class="logo-light">LMS</span></span>
+                </a>
+
+                <p>
+                    Learn new skills. Build confidence.<br>
+                    Create your future.
+                </p>
+
+            </div>
+
+            <div class="footer-links">
+                <a href="../index.html">Home</a>
+                <a href="courses.html">Courses</a>
+                <a href="about.html">About</a>
+                <a href="career.html">Career</a>
+                <a href="contact.html">Contact</a>
+            </div>
+
+        </div>
+
+        <div class="container footer-bottom">
+            <p>© 2026 Institute LMS. All rights reserved.</p>
+            <p>Learn • Grow • Succeed</p>
+        </div>
+
+    </footer>
+
+
+    <!-- SOCIAL LINK SCRIPT -->
+    <script>
+
+        document.querySelectorAll(".social-link").forEach(link => {
+
+            link.addEventListener("click", function(event) {
+
+                if (this.getAttribute("href") === "#") {
+                    event.preventDefault();
+
+                    alert(
+                        "Please add your official " +
+                        this.dataset.platform +
+                        " profile URL."
+                    );
+                }
+
+            });
+
+        });
+
+    </script>
+
+    <script src="../assets/js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Receipt | Institute LMS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f1f1;
+            color: #111;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .receipt {
+            background: #fff;
+            padding: 40px;
+            border: 1px solid #ddd;
+        }
+
+        .sample-label {
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #111;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 27px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            color: #555;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .receipt-title {
+            text-align: center;
+            margin: 25px 0;
+            font-size: 21px;
+            letter-spacing: 2px;
+        }
+
+        .receipt-info {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .receipt-info p {
+            margin: 8px 0;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+
+        .details-table th,
+        .details-table td {
+            border: 1px solid #ccc;
+            padding: 13px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .details-table th {
+            background: #f2f2f2;
+        }
+
+        .amount-section {
+            width: 100%;
+            max-width: 350px;
+            margin-left: auto;
+        }
+
+        .amount-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .amount-row.total {
+            background: #111;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .notice {
+            margin-top: 25px;
+            padding: 12px;
+            border: 1px dashed #888;
+            color: #555;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 65px;
+            gap: 30px;
+        }
+
+        .signature {
+            width: 200px;
+            text-align: center;
+            border-top: 1px solid #111;
+            padding-top: 10px;
+            font-size: 13px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            background: #111;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button.secondary {
+            background: #555;
+        }
+
+        @media(max-width: 600px) {
+            .receipt {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 21px;
+            }
+
+            .receipt-info {
+                display: block;
+            }
+
+            .signature-section {
+                margin-top: 45px;
+            }
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .receipt {
+                border: none;
+            }
+
+            .actions {
+                display: none;
+            }
+
+            .sample-label {
+                display: block;
+            }
+
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/premium-public.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="receipt">
+
+        <div class="sample-label">
+            DEMONSTRATION RECEIPT — NOT A VERIFIED PAYMENT RECORD
+        </div>
+
+        <div class="header">
+            <h1>Institute Name</h1>
+            <p>
+                Institute Address Here<br>
+                Phone: +91 00000 00000 |
+                Email: info@example.com
+            </p>
+        </div>
+
+        <h2 class="receipt-title">FEE PAYMENT RECEIPT</h2>
+
+        <div class="receipt-info">
+            <div>
+                <p><strong>Receipt No:</strong> FEE-2026-001</p>
+                <p><strong>Student ID:</strong> STU-2026-001</p>
+                <p><strong>Student Name:</strong> Rahul Sharma</p>
+                <p><strong>Branch:</strong> Main Branch</p>
+            </div>
+
+            <div>
+                <p><strong>Payment Date:</strong> 01-11-2026</p>
+                <p><strong>Course:</strong> AutoCAD</p>
+                <p><strong>Payment Mode:</strong> UPI</p>
+                <p><strong>Payment Reference:</strong> DEMO123456</p>
+            </div>
+        </div>
+
+        <table class="details-table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Amount (₹)</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Course Fee Payment</td>
+                    <td>5,000.00</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="amount-section">
+
+            <div class="amount-row">
+                <span>Total Course Fees</span>
+                <strong>₹15,000.00</strong>
+            </div>
+
+            <div class="amount-row">
+                <span>Previous Amount Paid</span>
+                <strong>₹3,000.00</strong>
+            </div>
+
+            <div class="amount-row">
+                <span>Previous Balance</span>
+                <strong>₹12,000.00</strong>
+            </div>
+
+            <div class="amount-row">
+                <span>Amount Received Now</span>
+                <strong>₹5,000.00</strong>
+            </div>
+
+            <div class="amount-row total">
+                <span>Remaining Balance</span>
+                <span>₹7,000.00</span>
+            </div>
+
+        </div>
+
+        <div class="notice">
+            This is a demonstration receipt containing sample data.
+            It does not confirm that a payment has been received or verified.
+            An official receipt must be generated from the institute's
+            verified payment records.
+        </div>
+
+        <div class="signature-section">
+            <div class="signature">
+                Student Signature
+            </div>
+
+            <div class="signature">
+                Authorized Signature
+            </div>
+        </div>
+
+    </div>
+
+    <div class="actions">
+        <button onclick="window.print()">Print / Save PDF</button>
+        <button class="secondary" onclick="window.history.back()">Go Back</button>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,673 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Institute LMS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #111;
+        }
+
+        .topbar {
+            background: #111;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .heading {
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .heading p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .settings-layout {
+            display: grid;
+            grid-template-columns: 230px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .sidebar,
+        .panel {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 9px;
+            padding: 20px;
+        }
+
+        .sidebar button {
+            width: 100%;
+            padding: 13px;
+            text-align: left;
+            border: none;
+            background: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .sidebar button.active,
+        .sidebar button:hover {
+            background: #111;
+            color: white;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .panel h2 {
+            font-size: 19px;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 22px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 17px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 13px;
+            background: white;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .btn {
+            padding: 12px 19px;
+            background: #111;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-light {
+            background: #eee;
+            color: #111;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .toggle-row p {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .toggle-row small {
+            display: block;
+            color: #777;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
+        .toggle-row input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .notice {
+            background: #f3f3f3;
+            padding: 14px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .status {
+            font-size: 13px;
+            color: #555;
+            margin-top: 12px;
+        }
+
+        @media(max-width: 750px) {
+            .settings-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: flex;
+                overflow-x: auto;
+                gap: 5px;
+                padding: 10px;
+            }
+
+            .sidebar button {
+                min-width: 130px;
+                margin: 0;
+            }
+
+            .container {
+                padding: 17px;
+            }
+        }
+
+        @media(max-width: 500px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .topbar {
+                padding: 16px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <h2>INSTITUTE LMS</h2>
+    <a href="business-head.html">← Dashboard</a>
+</header>
+
+<main class="container">
+
+    <div class="heading">
+        <h1>System Settings</h1>
+        <p>Manage institute information and system preferences.</p>
+    </div>
+
+    <div class="settings-layout">
+
+        <aside class="sidebar">
+            <button class="active" data-section="institute">Institute Profile</button>
+            <button data-section="academic">Academic Settings</button>
+            <button data-section="branch">Branch Settings</button>
+            <button data-section="admission">Admission Settings</button>
+            <button data-section="notifications">Notifications</button>
+            <button data-section="security">Account & Security</button>
+        </aside>
+
+        <div class="content">
+
+            <!-- Institute Profile -->
+
+            <section class="panel section active" id="institute">
+                <h2>Institute Profile</h2>
+                <p class="description">
+                    Update the basic information of your institute.
+                </p>
+
+                <form class="settings-form">
+                    <div class="form-grid">
+
+                        <div class="form-group full">
+                            <label>Institute Name</label>
+                            <input type="text" name="instituteName"
+                                value="Institute LMS" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Official Email</label>
+                            <input type="email" name="email"
+                                placeholder="info@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Contact Number</label>
+                            <input type="tel" name="phone"
+                                placeholder="+91 00000 00000">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Website</label>
+                            <input type="url" name="website"
+                                placeholder="https://example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Institute Registration Number</label>
+                            <input type="text" name="registration"
+                                placeholder="Registration number">
+                        </div>
+
+                        <div class="form-group full">
+                            <label>Institute Address</label>
+                            <textarea name="address"
+                                placeholder="Enter complete institute address"></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn" type="submit">Save Profile</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Academic Settings -->
+
+            <section class="panel section" id="academic">
+                <h2>Academic Settings</h2>
+                <p class="description">
+                    Configure academic sessions and examination preferences.
+                </p>
+
+                <form class="settings-form">
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>Academic Year</label>
+                            <input type="text" name="academicYear"
+                                value="2026-2027" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Session Start Date</label>
+                            <input type="date" name="startDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Session End Date</label>
+                            <input type="date" name="endDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Attendance Method</label>
+                            <select name="attendance">
+                                <option>Daily Attendance</option>
+                                <option>Period-wise Attendance</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Minimum Attendance (%)</label>
+                            <input type="number" name="minimumAttendance"
+                                min="0" max="100" value="75">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Result Grading</label>
+                            <select name="grading">
+                                <option>Percentage</option>
+                                <option>Grade</option>
+                                <option>Both</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn" type="submit">Save Academic Settings</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Branch Settings -->
+
+            <section class="panel section" id="branch">
+                <h2>Branch Settings</h2>
+                <p class="description">
+                    Configure default branch preferences.
+                </p>
+
+                <form class="settings-form">
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>Default Branch</label>
+                            <select name="defaultBranch">
+                                <option>Main Branch</option>
+                                <option>Branch 02</option>
+                                <option>Branch 03</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Branch Code Prefix</label>
+                            <input type="text" name="branchPrefix"
+                                value="BR">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Student ID Prefix</label>
+                            <input type="text" name="studentPrefix"
+                                value="STD">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Trainer ID Prefix</label>
+                            <input type="text" name="trainerPrefix"
+                                value="TR">
+                        </div>
+
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn" type="submit">Save Branch Settings</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Admission Settings -->
+
+            <section class="panel section" id="admission">
+                <h2>Admission Settings</h2>
+                <p class="description">
+                    Configure default admission and fee preferences.
+                </p>
+
+                <form class="settings-form">
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>Admission Status</label>
+                            <select name="admissionStatus">
+                                <option>Open</option>
+                                <option>Closed</option>
+                                <option>Coming Soon</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Admission ID Prefix</label>
+                            <input type="text" name="admissionPrefix"
+                                value="ADM">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Default Currency</label>
+                            <select name="currency">
+                                <option value="INR">INR (₹)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Receipt Prefix</label>
+                            <input type="text" name="receiptPrefix"
+                                value="RCP">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Allow Partial Payments</label>
+                            <select name="partialPayment">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Fee Due Reminder</label>
+                            <select name="feeReminder">
+                                <option>Enabled</option>
+                                <option>Disabled</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn" type="submit">Save Admission Settings</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Notifications -->
+
+            <section class="panel section" id="notifications">
+                <h2>Notification Preferences</h2>
+                <p class="description">
+                    Select which system notifications should be enabled.
+                </p>
+
+                <form class="settings-form">
+
+                    <div class="toggle-row">
+                        <div>
+                            <p>New Admission Notification</p>
+                            <small>Receive an alert when a student is admitted.</small>
+                        </div>
+                        <input type="checkbox" name="newAdmission" checked>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div>
+                            <p>Fee Payment Notification</p>
+                            <small>Receive an alert when a payment is recorded.</small>
+                        </div>
+                        <input type="checkbox" name="feePayment" checked>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div>
+                            <p>Attendance Notification</p>
+                            <small>Receive attendance-related alerts.</small>
+                        </div>
+                        <input type="checkbox" name="attendance">
+                    </div>
+
+                    <div class="toggle-row">
+                        <div>
+                            <p>Assignment Notification</p>
+                            <small>Receive assignment updates.</small>
+                        </div>
+                        <input type="checkbox" name="assignment" checked>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div>
+                            <p>Exam and Result Notification</p>
+                            <small>Receive examination and result updates.</small>
+                        </div>
+                        <input type="checkbox" name="exam" checked>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn" type="submit">Save Notifications</button>
+                    </div>
+
+                </form>
+            </section>
+
+            <!-- Security -->
+
+            <section class="panel section" id="security">
+                <h2>Account & Security</h2>
+                <p class="description">
+                    Account security options for the logged-in administrator.
+                </p>
+
+                <form class="settings-form">
+                    <div class="form-grid">
+
+                        <div class="form-group full">
+                            <label>Current Password</label>
+                            <input type="password" name="currentPassword"
+                                autocomplete="current-password"
+                                placeholder="Enter current password">
+                        </div>
+
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" name="newPassword"
+                                autocomplete="new-password"
+                                placeholder="Enter new password">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Confirm New Password</label>
+                            <input type="password" name="confirmPassword"
+                                autocomplete="new-password"
+                                placeholder="Confirm new password">
+                        </div>
+
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn" type="submit">Update Password</button>
+                    </div>
+                </form>
+
+                <div class="notice">
+                    Password changes are not connected to a real authentication
+                    system yet. The Flask backend must verify the current
+                    password, hash the new password securely, and enforce
+                    authorization before saving changes.
+                </div>
+            </section>
+
+            <p class="status" id="statusMessage"></p>
+
+        </div>
+    </div>
+
+</main>
+
+<script>
+    const tabButtons = document.querySelectorAll(".sidebar button");
+    const sections = document.querySelectorAll(".section");
+
+    tabButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            tabButtons.forEach(item => item.classList.remove("active"));
+            sections.forEach(item => item.classList.remove("active"));
+
+            button.classList.add("active");
+
+            const target = document.getElementById(
+                button.dataset.section
+            );
+
+            if (target) target.classList.add("active");
+
+            document.getElementById("statusMessage").textContent = "";
+        });
+    });
+
+    document.querySelectorAll(".settings-form").forEach(form => {
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+
+            if (formData.has("newPassword")) {
+                const newPassword = formData.get("newPassword");
+                const confirmPassword = formData.get("confirmPassword");
+
+                if (newPassword || confirmPassword) {
+                    if (newPassword.length < 8) {
+                        alert("New password must contain at least 8 characters.");
+                        return;
+                    }
+
+                    if (newPassword !== confirmPassword) {
+                        alert("New passwords do not match.");
+                        return;
+                    }
+
+                    if (!formData.get("currentPassword")) {
+                        alert("Enter your current password.");
+                        return;
+                    }
+                }
+            }
+
+            document.getElementById("statusMessage").textContent =
+                "Demo only: settings validated. Connect the Flask backend to save changes.";
+
+            alert("Settings validated successfully. Database saving is not connected yet.");
+        });
+    });
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["BusinessHead", "Manager"]));</script>
+</body>
+</html>

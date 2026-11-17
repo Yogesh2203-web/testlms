@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Courses | Institute LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:#f5f5f5;color:#171717}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:250px;background:#111;color:white;padding:25px 18px;position:fixed;height:100vh;overflow-y:auto;z-index:20}
+.brand{font-size:21px;font-weight:800;padding:5px 10px 30px}
+.brand span{color:#aaa}
+.nav-label{color:#777;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;padding:15px 10px 10px}
+.nav-link{display:block;padding:12px;margin-bottom:5px;border-radius:9px;text-decoration:none;color:#aaa;font-size:13px}
+.nav-link:hover,.nav-link.active{background:#292929;color:white}
+.main{margin-left:250px;width:calc(100% - 250px);padding:28px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}
+.topbar h1{font-size:25px;margin-bottom:5px}
+.topbar p{font-size:13px;color:#777}
+.profile{display:flex;align-items:center;gap:12px}
+.avatar{width:42px;height:42px;border-radius:50%;background:#111;color:white;display:grid;place-items:center;font-weight:700}
+.profile small{display:block;color:#888;margin-top:4px;font-size:11px}
+.menu-btn{display:none;background:#111;color:white;border:0;padding:10px 13px;border-radius:7px;cursor:pointer}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:24px}
+.summary-card{background:white;border:1px solid #eaeaea;border-radius:12px;padding:20px}
+.summary-card small{font-size:12px;color:#777}
+.summary-card h2{font-size:25px;margin-top:9px}
+.toolbar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.search{flex:1;min-width:200px;padding:12px 14px;border:1px solid #ddd;border-radius:9px;outline:none;background:white}
+.filter{padding:12px;border:1px solid #ddd;border-radius:9px;background:white;min-width:150px}
+.course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.course-card{background:white;border:1px solid #e9e9e9;border-radius:14px;overflow:hidden;transition:.2s}
+.course-card:hover{transform:translateY(-3px);box-shadow:0 8px 25px #0000000b}
+.course-banner{height:115px;background:#111;color:white;padding:20px;display:flex;align-items:center;justify-content:space-between}
+.course-banner .symbol{font-size:30px;font-weight:800}
+.course-banner small{color:#bbb}
+.course-body{padding:19px}
+.course-body h3{font-size:16px;margin-bottom:7px}
+.course-body .category{font-size:11px;color:#888;margin-bottom:15px}
+.details{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.detail small{display:block;color:#888;font-size:10px;margin-bottom:5px}
+.detail strong{font-size:12px}
+.progress-info{display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px}
+.progress{height:6px;background:#eee;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.progress span{height:100%;display:block;background:#111;border-radius:10px}
+.card-actions{display:flex;gap:8px}
+.btn{flex:1;text-align:center;padding:10px 8px;border-radius:8px;text-decoration:none;font-size:11px;font-weight:700;border:1px solid #111;cursor:pointer}
+.btn-dark{background:#111;color:white}
+.btn-light{background:white;color:#111}
+.status{font-size:10px;padding:6px 9px;border-radius:20px;background:#e5f5e9;color:#23733b}
+.empty{display:none;background:white;padding:35px;text-align:center;border-radius:12px;color:#777;margin-top:15px}
+.footer{text-align:center;color:#999;font-size:11px;padding:25px 0}
+.overlay{display:none}
+@media(max-width:1100px){.course-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){
+.sidebar{transform:translateX(-100%);transition:.3s}
+.sidebar.open{transform:translateX(0)}
+.overlay.show{display:block;position:fixed;inset:0;background:#0008;z-index:10}
+.main{margin-left:0;width:100%;padding:20px}
+.menu-btn{display:block}
+.topbar{justify-content:flex-start;flex-wrap:wrap}
+.profile{margin-left:auto}
+}
+@media(max-width:550px){
+.main{padding:15px}
+.topbar h1{font-size:20px}
+.profile-info{display:none}
+.summary{grid-template-columns:1fr}
+.course-grid{grid-template-columns:1fr}
+}
+</style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+
+<body>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+    <div class="brand">INSTITUTE <span>LMS</span></div>
+
+    <div class="nav-label">Student Menu</div>
+    <a href="student.html" class="nav-link">▦ Dashboard</a>
+    <a href="student-courses.html" class="nav-link active">▣ My Courses</a>
+    <a href="student-assignments.html" class="nav-link">✎ Assignments</a>
+    <a href="student-exams.html" class="nav-link">▤ Exams</a>
+    <a href="student-results.html" class="nav-link">★ Results</a>
+    <a href="student-attendance.html" class="nav-link">◷ Attendance</a>
+    <a href="student-fees.html" class="nav-link">₹ Fees & Receipts</a>
+    <a href="student-learning.html" class="nav-link">▶ Learning Resources</a>
+
+    <div class="nav-label">Account</div>
+    <a href="student-profile.html" class="nav-link">♙ My Profile</a>
+    <a href="../pages/login.html" class="nav-link">↪ Logout</a>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <div>
+        <h1>My Courses</h1>
+        <p>Manage and explore your enrolled courses.</p>
+    </div>
+    <div class="profile">
+        <div class="avatar">ST</div>
+        <div class="profile-info">
+            <strong>Student Name</strong>
+            <small>Student ID: STU-2026-001</small>
+        </div>
+    </div>
+</header>
+
+<section class="summary">
+    <div class="summary-card">
+        <small>Total Enrolled Courses</small>
+        <h2 id="totalCourses">03</h2>
+    </div>
+    <div class="summary-card">
+        <small>In Progress</small>
+        <h2 id="activeCourses">03</h2>
+    </div>
+    <div class="summary-card">
+        <small>Completed Courses</small>
+        <h2 id="completedCourses">00</h2>
+    </div>
+</section>
+
+<div class="toolbar">
+    <input type="text" id="searchInput" class="search" placeholder="Search course name or trainer...">
+
+    <select id="statusFilter" class="filter">
+        <option value="all">All Courses</option>
+        <option value="active">In Progress</option>
+        <option value="completed">Completed</option>
+    </select>
+</div>
+
+<section class="course-grid" id="courseGrid">
+
+    <article class="course-card" data-name="autocad professional" data-trainer="rahul patil" data-status="active" data-progress="75">
+        <div class="course-banner">
+            <div>
+                <small>DESIGN & ENGINEERING</small>
+                <h2>AutoCAD</h2>
+            </div>
+            <div class="symbol">AC</div>
+        </div>
+        <div class="course-body">
+            <h3>AutoCAD Professional</h3>
+            <p class="category">2D Drafting & 3D Design</p>
+            <div class="details">
+                <div class="detail"><small>Trainer</small><strong>Rahul Patil</strong></div>
+                <div class="detail"><small>Batch</small><strong>AC-2026-A</strong></div>
+                <div class="detail"><small>Duration</small><strong>3 Months</strong></div>
+                <div class="detail"><small>Status</small><strong><span class="status">Active</span></strong></div>
+            </div>
+            <div class="progress-info"><span>Course Progress</span><strong>75%</strong></div>
+            <div class="progress"><span style="width:75%"></span></div>
+            <div class="card-actions">
+                <a href="student-learning.html" class="btn btn-dark">Start Learning</a>
+                <button class="btn btn-light" onclick="showDetails('AutoCAD Professional','Rahul Patil','AC-2026-A','3 Months','75%')">Details</button>
+            </div>
+        </div>
+    </article>
+
+    <article class="course-card" data-name="creo 3d design" data-trainer="amit shinde" data-status="active" data-progress="45">
+        <div class="course-banner">
+            <div>
+                <small>MECHANICAL DESIGN</small>
+                <h2>Creo</h2>
+            </div>
+            <div class="symbol">3D</div>
+        </div>
+        <div class="course-body">
+            <h3>Creo 3D Design</h3>
+            <p class="category">3D Modeling & Product Design</p>
+            <div class="details">
+                <div class="detail"><small>Trainer</small><strong>Amit Shinde</strong></div>
+                <div class="detail"><small>Batch</small><strong>CR-2026-B</strong></div>
+                <div class="detail"><small>Duration</small><strong>4 Months</strong></div>
+                <div class="detail"><small>Status</small><strong><span class="status">Active</span></strong></div>
+            </div>
+            <div class="progress-info"><span>Course Progress</span><strong>45%</strong></div>
+            <div class="progress"><span style="width:45%"></span></div>
+            <div class="card-actions">
+                <a href="student-learning.html" class="btn btn-dark">Start Learning</a>
+                <button class="btn btn-light" onclick="showDetails('Creo 3D Design','Amit Shinde','CR-2026-B','4 Months','45%')">Details</button>
+            </div>
+        </div>
+    </article>
+
+    <article class="course-card" data-name="python programming" data-trainer="priya deshmukh" data-status="active" data-progress="60">
+        <div class="course-banner">
+            <div>
+                <small>PROGRAMMING</small>
+                <h2>Python</h2>
+            </div>
+            <div class="symbol">PY</div>
+        </div>
+        <div class="course-body">
+            <h3>Python Programming</h3>
+            <p class="category">Programming & Development</p>
+            <div class="details">
+                <div class="detail"><small>Trainer</small><strong>Priya Deshmukh</strong></div>
+                <div class="detail"><small>Batch</small><strong>PY-2026-C</strong></div>
+                <div class="detail"><small>Duration</small><strong>2 Months</strong></div>
+                <div class="detail"><small>Status</small><strong><span class="status">Active</span></strong></div>
+            </div>
+            <div class="progress-info"><span>Course Progress</span><strong>60%</strong></div>
+            <div class="progress"><span style="width:60%"></span></div>
+            <div class="card-actions">
+                <a href="student-learning.html" class="btn btn-dark">Start Learning</a>
+                <button class="btn btn-light" onclick="showDetails('Python Programming','Priya Deshmukh','PY-2026-C','2 Months','60%')">Details</button>
+            </div>
+        </div>
+    </article>
+
+    <article class="course-card" data-name="web development" data-trainer="neha joshi" data-status="completed" data-progress="100">
+        <div class="course-banner">
+            <div>
+                <small>PROGRAMMING</small>
+                <h2>Web</h2>
+            </div>
+            <div class="symbol">WD</div>
+        </div>
+        <div class="course-body">
+            <h3>Web Development</h3>
+            <p class="category">HTML, CSS & JavaScript</p>
+            <div class="details">
+                <div class="detail"><small>Trainer</small><strong>Neha Joshi</strong></div>
+                <div class="detail"><small>Batch</small><strong>WD-2026-A</strong></div>
+                <div class="detail"><small>Duration</small><strong>3 Months</strong></div>
+                <div class="detail"><small>Status</small><strong><span class="status">Completed</span></strong></div>
+            </div>
+            <div class="progress-info"><span>Course Progress</span><strong>100%</strong></div>
+            <div class="progress"><span style="width:100%"></span></div>
+            <div class="card-actions">
+                <a href="student-learning.html" class="btn btn-dark">Review Course</a>
+                <button class="btn btn-light" onclick="showDetails('Web Development','Neha Joshi','WD-2026-A','3 Months','100%')">Details</button>
+            </div>
+        </div>
+    </article>
+
+</section>
+
+<div class="empty" id="emptyState">
+    <h3>No courses found</h3>
+    <p>Try another search or filter.</p>
+</div>
+
+<footer class="footer">
+    © 2026 Institute LMS. Sample course information.
+    <br><br>
+    Course records and progress will load from PostgreSQL after backend integration.
+</footer>
+
+</main>
+</div>
+
+<script>
+function toggleMenu(){
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("overlay").classList.toggle("show");
+}
+
+const searchInput = document.getElementById("searchInput");
+const statusFilter = document.getElementById("statusFilter");
+const cards = [...document.querySelectorAll(".course-card")];
+
+function filterCourses(){
+    const query = searchInput.value.toLowerCase().trim();
+    const status = statusFilter.value;
+    let visible = 0;
+
+    cards.forEach(card => {
+        const name = card.dataset.name;
+        const trainer = card.dataset.trainer;
+        const cardStatus = card.dataset.status;
+
+        const matchesSearch = name.includes(query) || trainer.includes(query);
+        const matchesStatus = status === "all" || status === cardStatus;
+
+        card.style.display = matchesSearch && matchesStatus ? "" : "none";
+
+        if(matchesSearch && matchesStatus) visible++;
+    });
+
+    document.getElementById("emptyState").style.display =
+        visible === 0 ? "block" : "none";
+}
+
+searchInput.addEventListener("input", filterCourses);
+statusFilter.addEventListener("change", filterCourses);
+
+document.getElementById("totalCourses").textContent = cards.length;
+document.getElementById("activeCourses").textContent =
+    cards.filter(card => card.dataset.status === "active").length;
+document.getElementById("completedCourses").textContent =
+    cards.filter(card => card.dataset.status === "completed").length;
+
+function showDetails(name, trainer, batch, duration, progress){
+    alert(
+        "COURSE DETAILS\n\n" +
+        "Course: " + name + "\n" +
+        "Trainer: " + trainer + "\n" +
+        "Batch: " + batch + "\n" +
+        "Duration: " + duration + "\n" +
+        "Progress: " + progress
+    );
+}
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["Student"]));</script>
+</body>
+</html>

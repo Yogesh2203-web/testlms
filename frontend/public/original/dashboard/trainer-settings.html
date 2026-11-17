@@ -1,0 +1,735 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Settings | Institute LMS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #111;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            background: #111;
+            color: white;
+            padding: 25px 15px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 19px;
+            font-weight: bold;
+            padding: 0 12px 30px;
+        }
+
+        .brand small {
+            display: block;
+            color: #999;
+            font-size: 11px;
+            margin-top: 7px;
+            font-weight: normal;
+        }
+
+        .nav-label {
+            color: #888;
+            font-size: 10px;
+            padding: 15px 12px 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 13px 12px;
+            color: #bbb;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: white;
+            color: #111;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 75px;
+            background: white;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+
+        .topbar h2 {
+            font-size: 19px;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .heading {
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            font-size: 26px;
+            margin-bottom: 7px;
+        }
+
+        .heading p {
+            color: #777;
+            font-size: 13px;
+        }
+
+        .settings-layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .sidebar-menu,
+        .panel {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .sidebar-menu button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            background: white;
+            text-align: left;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu button.active,
+        .sidebar-menu button:hover {
+            background: #111;
+            color: white;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .panel h2 {
+            font-size: 19px;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 22px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+            font-size: 13px;
+        }
+
+        input[readonly] {
+            background: #f5f5f5;
+            color: #777;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 85px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .primary {
+            background: #111;
+            color: white;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .toggle-row strong {
+            font-size: 13px;
+        }
+
+        .toggle-row small {
+            display: block;
+            color: #777;
+            margin-top: 5px;
+            font-size: 11px;
+        }
+
+        .toggle-row input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .notice {
+            margin-top: 20px;
+            background: #eee;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .mobile-menu {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 22px;
+        }
+
+        @media(max-width: 800px) {
+            .settings-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                gap: 5px;
+                overflow-x: auto;
+                padding: 10px;
+            }
+
+            .sidebar-menu button {
+                min-width: 120px;
+                margin: 0;
+            }
+        }
+
+        @media(max-width: 700px) {
+            .sidebar {
+                display: none;
+                position: fixed;
+                z-index: 10;
+                height: 100vh;
+                overflow-y: auto;
+            }
+
+            .sidebar.open {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .content {
+                padding: 17px;
+            }
+        }
+
+        @media(max-width: 500px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar" id="mainSidebar">
+
+        <div class="brand">
+            INSTITUTE LMS
+            <small>TRAINER PANEL</small>
+        </div>
+
+        <div class="nav-label">Main Menu</div>
+
+        <a href="trainer.html" class="nav-link">Dashboard</a>
+        <a href="trainer-students.html" class="nav-link">My Students</a>
+        <a href="trainer-attendance.html" class="nav-link">Attendance</a>
+        <a href="trainer-assignments.html" class="nav-link">Assignments</a>
+        <a href="trainer-exams.html" class="nav-link">Exams & Results</a>
+
+        <div class="nav-label">Account</div>
+
+        <a href="trainer-settings.html" class="nav-link active">My Profile</a>
+        <a href="../pages/login.html" class="nav-link">Logout</a>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div style="display:flex;align-items:center;gap:15px">
+                <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+                <h2>My Settings</h2>
+            </div>
+
+            <span style="font-size:13px">Trainer Account</span>
+        </header>
+
+        <div class="content">
+
+            <section class="heading">
+                <h1>Trainer Profile</h1>
+                <p>Manage your personal information and account preferences.</p>
+            </section>
+
+            <div class="settings-layout">
+
+                <aside class="sidebar-menu">
+
+                    <button class="active" data-section="profile">
+                        Personal Profile
+                    </button>
+
+                    <button data-section="professional">
+                        Professional Details
+                    </button>
+
+                    <button data-section="notifications">
+                        Notifications
+                    </button>
+
+                    <button data-section="security">
+                        Password & Security
+                    </button>
+
+                </aside>
+
+                <div>
+
+                    <!-- Profile -->
+
+                    <section class="panel section active" id="profile">
+
+                        <h2>Personal Information</h2>
+
+                        <p class="description">
+                            Update your contact and personal details.
+                        </p>
+
+                        <form class="settings-form">
+
+                            <div class="form-grid">
+
+                                <div class="form-group">
+                                    <label>Trainer ID</label>
+                                    <input value="TR1001" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" name="name"
+                                        value="Trainer Name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input type="email" name="email"
+                                        placeholder="trainer@example.com" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Mobile Number</label>
+                                    <input type="tel" name="mobile"
+                                        pattern="[0-9]{10}"
+                                        placeholder="10-digit mobile number" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Date of Birth</label>
+                                    <input type="date" name="dob">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Gender</label>
+                                    <select name="gender">
+                                        <option value="">Select Gender</option>
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                        <option>Other</option>
+                                        <option>Prefer not to say</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group full">
+                                    <label>Address</label>
+                                    <textarea name="address"
+                                        placeholder="Enter your address"></textarea>
+                                </div>
+
+                            </div>
+
+                            <button type="submit" class="primary">
+                                Save Profile
+                            </button>
+
+                        </form>
+
+                    </section>
+
+                    <!-- Professional -->
+
+                    <section class="panel section" id="professional">
+
+                        <h2>Professional Details</h2>
+
+                        <p class="description">
+                            Your qualification, specialization and work details.
+                        </p>
+
+                        <form class="settings-form">
+
+                            <div class="form-grid">
+
+                                <div class="form-group">
+                                    <label>Qualification</label>
+                                    <input type="text" name="qualification"
+                                        placeholder="Example: BE Mechanical">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Experience</label>
+                                    <input type="number" name="experience"
+                                        min="0" max="60" placeholder="Years">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Assigned Branch</label>
+                                    <input value="Main Branch" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Trainer Status</label>
+                                    <input value="Active" readonly>
+                                </div>
+
+                                <div class="form-group full">
+                                    <label>Specialization</label>
+                                    <textarea name="specialization"
+                                        placeholder="Enter your professional skills and specialization"></textarea>
+                                </div>
+
+                            </div>
+
+                            <div class="notice">
+                                Branch and account status changes must be
+                                approved by the authorized manager or
+                                Business Head.
+                            </div>
+
+                            <br>
+
+                            <button type="submit" class="primary">
+                                Save Professional Details
+                            </button>
+
+                        </form>
+
+                    </section>
+
+                    <!-- Notifications -->
+
+                    <section class="panel section" id="notifications">
+
+                        <h2>Notification Preferences</h2>
+
+                        <p class="description">
+                            Choose which notifications you want to receive.
+                        </p>
+
+                        <form class="settings-form">
+
+                            <div class="toggle-row">
+                                <div>
+                                    <strong>New Student Assignment</strong>
+                                    <small>When students are assigned to your batch.</small>
+                                </div>
+                                <input type="checkbox" name="newStudent" checked>
+                            </div>
+
+                            <div class="toggle-row">
+                                <div>
+                                    <strong>Assignment Submissions</strong>
+                                    <small>When students submit assignments.</small>
+                                </div>
+                                <input type="checkbox" name="submission" checked>
+                            </div>
+
+                            <div class="toggle-row">
+                                <div>
+                                    <strong>Exam Notifications</strong>
+                                    <small>Examination schedule and updates.</small>
+                                </div>
+                                <input type="checkbox" name="exam" checked>
+                            </div>
+
+                            <div class="toggle-row">
+                                <div>
+                                    <strong>Attendance Reminders</strong>
+                                    <small>Reminders to complete attendance.</small>
+                                </div>
+                                <input type="checkbox" name="attendance" checked>
+                            </div>
+
+                            <div class="toggle-row">
+                                <div>
+                                    <strong>Institute Announcements</strong>
+                                    <small>Important messages from management.</small>
+                                </div>
+                                <input type="checkbox" name="announcements" checked>
+                            </div>
+
+                            <br>
+
+                            <button type="submit" class="primary">
+                                Save Preferences
+                            </button>
+
+                        </form>
+
+                    </section>
+
+                    <!-- Security -->
+
+                    <section class="panel section" id="security">
+
+                        <h2>Password & Security</h2>
+
+                        <p class="description">
+                            Update your account password.
+                        </p>
+
+                        <form id="passwordForm">
+
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password"
+                                    name="currentPassword"
+                                    autocomplete="current-password"
+                                    required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password"
+                                    id="newPassword"
+                                    name="newPassword"
+                                    minlength="8"
+                                    autocomplete="new-password"
+                                    required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Confirm New Password</label>
+                                <input type="password"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    minlength="8"
+                                    autocomplete="new-password"
+                                    required>
+                            </div>
+
+                            <button type="submit" class="primary">
+                                Update Password
+                            </button>
+
+                        </form>
+
+                        <div class="notice">
+                            Password updates are not connected to authentication
+                            yet. The production backend must verify the current
+                            password and securely hash the new password.
+                        </div>
+
+                    </section>
+
+                    <p class="status-message" id="statusMessage"></p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+    const tabButtons = document.querySelectorAll(
+        ".sidebar-menu button"
+    );
+
+    const sections = document.querySelectorAll(".section");
+
+    tabButtons.forEach(button => {
+        button.addEventListener("click", () => {
+
+            tabButtons.forEach(item =>
+                item.classList.remove("active")
+            );
+
+            sections.forEach(section =>
+                section.classList.remove("active")
+            );
+
+            button.classList.add("active");
+
+            document.getElementById(
+                button.dataset.section
+            ).classList.add("active");
+
+            document.getElementById("statusMessage").textContent = "";
+        });
+    });
+
+    document.querySelectorAll(".settings-form").forEach(form => {
+
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+
+            if (!form.reportValidity()) return;
+
+            document.getElementById("statusMessage").textContent =
+                "Demo only: information validated but not saved to the database.";
+
+            alert(
+                "Information validated successfully. " +
+                "Backend database connection is pending."
+            );
+        });
+
+    });
+
+    document.getElementById("passwordForm")
+        .addEventListener("submit", event => {
+
+            event.preventDefault();
+
+            if (!event.target.reportValidity()) return;
+
+            const newPassword =
+                document.getElementById("newPassword").value;
+
+            const confirmPassword =
+                document.getElementById("confirmPassword").value;
+
+            if (newPassword !== confirmPassword) {
+                alert("New passwords do not match.");
+                return;
+            }
+
+            alert(
+                "Password form validated. " +
+                "Actual password update requires the Flask backend."
+            );
+
+            event.target.reset();
+        });
+
+    function toggleSidebar() {
+        document.getElementById("mainSidebar")
+            .classList.toggle("open");
+    }
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["Trainer"]));</script>
+</body>
+</html>

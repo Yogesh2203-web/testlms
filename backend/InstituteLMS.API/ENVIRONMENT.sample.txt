@@ -1,0 +1,11 @@
+Required API host environment variables (Production):
+ASPNETCORE_ENVIRONMENT=Production
+ASPNETCORE_URLS=http://+:8080
+ConnectionStrings__DefaultConnection=Server=tcp:YOUR_SQL_SERVER,1433;Initial Catalog=InstituteLMSDb;User ID=YOUR_APP_USER;Password=SET_IN_HOST_SECRET_STORE;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+Jwt__Issuer=InstituteLMS
+Jwt__Audience=InstituteLMSUsers
+Jwt__Key=GENERATE_AT_LEAST_32_RANDOM_BYTES_AND_STORE_AS_A_SECRET
+Cors__AllowedOrigins__0=https://YOUR-VERCEL-DOMAIN.vercel.app
+AdminSetupKey=ONE_TIME_RANDOM_SETUP_SECRET_ONLY_DURING_INITIAL_BOOTSTRAP
+
+Never commit real values. Remove AdminSetupKey after creating the first Business Head.

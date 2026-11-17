@@ -1,0 +1,19 @@
+INSTITUTE LMS — PREMIUM FRONTEND UPDATE
+
+This update refreshes the shared visual system for the existing HTML pages inside the Angular 20 frontend.
+
+Updated:
+- Public website pages use assets/css/premium-public.css
+- All role dashboards and dashboard sub-pages use assets/css/premium-dashboard.css
+- Existing page markup, route names, API JavaScript, authentication JavaScript, and backend files are preserved.
+- Design direction: premium navy, electric blue, cyan accents, modern typography, responsive cards, forms, tables, and navigation.
+
+Run locally:
+1. Start the existing ASP.NET Core API in its backend folder.
+2. Open a second terminal in frontend.
+3. Run: npm install
+4. Run: npm start
+5. Open http://localhost:4200 and hard-refresh with Ctrl+F5.
+
+Important:
+This is a frontend visual refresh, not a claim that every backend feature is complete. Existing API behavior and any unfinished API integrations are intentionally not rewritten in this frontend-only phase.

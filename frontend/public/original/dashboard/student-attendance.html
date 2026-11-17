@@ -1,0 +1,324 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Attendance | Institute LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:#f5f5f5;color:#171717}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:250px;background:#111;color:white;padding:25px 18px;position:fixed;height:100vh;overflow-y:auto;z-index:20}
+.brand{font-size:21px;font-weight:800;padding:5px 10px 30px}
+.brand span{color:#aaa}
+.nav-label{color:#777;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;padding:15px 10px 10px}
+.nav-link{display:block;padding:12px;margin-bottom:5px;border-radius:9px;text-decoration:none;color:#aaa;font-size:13px}
+.nav-link:hover,.nav-link.active{background:#292929;color:white}
+.main{margin-left:250px;width:calc(100% - 250px);padding:28px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}
+.topbar h1{font-size:25px;margin-bottom:5px}
+.topbar p{font-size:13px;color:#777}
+.profile{display:flex;align-items:center;gap:12px}
+.avatar{width:42px;height:42px;border-radius:50%;background:#111;color:white;display:grid;place-items:center;font-weight:700}
+.profile small{display:block;color:#888;margin-top:4px;font-size:11px}
+.menu-btn{display:none;background:#111;color:white;border:0;padding:10px 13px;border-radius:7px;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
+.stat{background:white;border:1px solid #eaeaea;border-radius:12px;padding:19px}
+.stat small{font-size:12px;color:#777}
+.stat h2{font-size:25px;margin-top:9px}
+.grid{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;margin-bottom:20px}
+.panel{background:white;border:1px solid #eaeaea;border-radius:13px;padding:20px;min-width:0}
+.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:17px}
+.panel-heading h2{font-size:16px}
+.select{padding:9px;border:1px solid #ddd;border-radius:8px;background:white}
+.legend{display:flex;gap:13px;flex-wrap:wrap;margin-bottom:15px}
+.legend span{font-size:10px;color:#777;display:flex;align-items:center;gap:6px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.present-dot{background:#222}
+.absent-dot{background:#e05a5a}
+.late-dot{background:#d69b28}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;text-align:center}
+.day-name{font-size:10px;color:#888;padding:8px 0}
+.day{min-height:37px;display:grid;place-items:center;border-radius:8px;font-size:11px;background:#f7f7f7}
+.day.present{background:#e5f5e9;color:#23733b;font-weight:700}
+.day.absent{background:#ffe7e7;color:#a22;font-weight:700}
+.day.late{background:#fff2d9;color:#946000;font-weight:700}
+.day.today{outline:2px solid #111}
+.attendance-box{display:flex;align-items:center;gap:22px}
+.circle{width:115px;height:115px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#111 85%,#e8e8e8 85%);position:relative;flex-shrink:0}
+.circle:before{content:"";position:absolute;width:86px;height:86px;border-radius:50%;background:white}
+.circle strong{position:relative;font-size:22px}
+.attendance-details p{font-size:12px;color:#777;margin:10px 0}
+.attendance-details strong{color:#171717}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:550px}
+th,td{text-align:left;padding:13px 12px;border-bottom:1px solid #eee;font-size:12px}
+th{font-size:11px;color:#777;background:#fafafa}
+.badge{padding:6px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.badge.present{background:#e5f5e9;color:#23733b}
+.badge.absent{background:#ffe7e7;color:#a22}
+.badge.late{background:#fff2d9;color:#946000}
+.progress-row{margin-bottom:18px}
+.progress-top{display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px}
+.progress{height:7px;background:#eee;border-radius:10px;overflow:hidden}
+.progress span{height:100%;display:block;background:#111;border-radius:10px}
+.footer{text-align:center;color:#999;font-size:11px;padding:25px 0}
+.overlay{display:none}
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+@media(max-width:800px){
+.sidebar{transform:translateX(-100%);transition:.3s}
+.sidebar.open{transform:translateX(0)}
+.overlay.show{display:block;position:fixed;inset:0;background:#0008;z-index:10}
+.main{margin-left:0;width:100%;padding:20px}
+.menu-btn{display:block}
+.topbar{justify-content:flex-start;flex-wrap:wrap}
+.profile{margin-left:auto}
+}
+@media(max-width:550px){
+.main{padding:15px}
+.topbar h1{font-size:20px}
+.profile-info{display:none}
+.stats{gap:10px}
+.stat{padding:14px}
+.stat h2{font-size:21px}
+.panel{padding:14px}
+.attendance-box{flex-wrap:wrap}
+.calendar{gap:4px}
+.day{min-height:32px;font-size:10px}
+}
+@media print{
+.sidebar,.menu-btn,.footer{display:none!important}
+.main{margin:0;width:100%;padding:0}
+body{background:white}
+}
+</style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+
+<body>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+    <div class="brand">INSTITUTE <span>LMS</span></div>
+    <div class="nav-label">Student Menu</div>
+    <a href="student.html" class="nav-link">▦ Dashboard</a>
+    <a href="student-courses.html" class="nav-link">▣ My Courses</a>
+    <a href="student-assignments.html" class="nav-link">✎ Assignments</a>
+    <a href="student-exams.html" class="nav-link">▤ Exams</a>
+    <a href="student-results.html" class="nav-link">★ Results</a>
+    <a href="student-attendance.html" class="nav-link active">◷ Attendance</a>
+    <a href="student-fees.html" class="nav-link">₹ Fees & Receipts</a>
+    <a href="student-learning.html" class="nav-link">▶ Learning Resources</a>
+    <div class="nav-label">Account</div>
+    <a href="student-profile.html" class="nav-link">♙ My Profile</a>
+    <a href="../pages/login.html" class="nav-link">↪ Logout</a>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <div>
+        <h1>My Attendance</h1>
+        <p>Track your daily and monthly attendance.</p>
+    </div>
+    <div class="profile">
+        <div class="avatar">ST</div>
+        <div class="profile-info">
+            <strong>Student Name</strong>
+            <small>Student ID: STU-2026-001</small>
+        </div>
+    </div>
+</header>
+
+<section class="stats">
+    <div class="stat"><small>Overall Attendance</small><h2>85%</h2></div>
+    <div class="stat"><small>Present Days</small><h2>34</h2></div>
+    <div class="stat"><small>Absent Days</small><h2>06</h2></div>
+    <div class="stat"><small>Late Days</small><h2>02</h2></div>
+</section>
+
+<div class="grid">
+
+<section class="panel">
+    <div class="panel-heading">
+        <h2>Monthly Calendar</h2>
+        <select class="select" id="monthSelect">
+            <option value="10">October 2026</option>
+            <option value="9">September 2026</option>
+            <option value="8">August 2026</option>
+        </select>
+    </div>
+
+    <div class="legend">
+        <span><i class="dot present-dot"></i> Present</span>
+        <span><i class="dot absent-dot"></i> Absent</span>
+        <span><i class="dot late-dot"></i> Late</span>
+    </div>
+
+    <div class="calendar" id="calendar"></div>
+</section>
+
+<section class="panel">
+    <div class="panel-heading">
+        <h2>Attendance Overview</h2>
+    </div>
+
+    <div class="attendance-box">
+        <div class="circle"><strong>85%</strong></div>
+        <div class="attendance-details">
+            <p>Present: <strong>34 days</strong></p>
+            <p>Absent: <strong>6 days</strong></p>
+            <p>Late: <strong>2 days</strong></p>
+            <p>Working days: <strong>40 days</strong></p>
+        </div>
+    </div>
+
+    <div style="margin-top:22px;padding-top:17px;border-top:1px solid #eee">
+        <p style="font-size:12px;font-weight:700;margin-bottom:8px">Attendance Target</p>
+        <div class="progress">
+            <span style="width:85%"></span>
+        </div>
+        <p style="font-size:10px;color:#888;margin-top:8px">Target: 75% · Current: 85%</p>
+    </div>
+</section>
+
+</div>
+
+<section class="panel">
+    <div class="panel-heading">
+        <h2>Course-wise Attendance</h2>
+    </div>
+
+    <div class="progress-row">
+        <div class="progress-top"><span>AutoCAD Professional</span><strong>90%</strong></div>
+        <div class="progress"><span style="width:90%"></span></div>
+    </div>
+
+    <div class="progress-row">
+        <div class="progress-top"><span>Creo 3D Design</span><strong>80%</strong></div>
+        <div class="progress"><span style="width:80%"></span></div>
+    </div>
+
+    <div class="progress-row">
+        <div class="progress-top"><span>Python Programming</span><strong>85%</strong></div>
+        <div class="progress"><span style="width:85%"></span></div>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-heading">
+        <h2>Recent Attendance Records</h2>
+        <button class="select" onclick="window.print()">Print Report</button>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Course</th>
+                    <th>Session</th>
+                    <th>Trainer</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>01 Nov 2026</td><td>AutoCAD</td><td>Morning</td><td>Rahul Patil</td><td><span class="badge present">Present</span></td></tr>
+                <tr><td>31 Oct 2026</td><td>Python</td><td>Afternoon</td><td>Priya Deshmukh</td><td><span class="badge present">Present</span></td></tr>
+                <tr><td>30 Oct 2026</td><td>Creo</td><td>Morning</td><td>Amit Shinde</td><td><span class="badge absent">Absent</span></td></tr>
+                <tr><td>29 Oct 2026</td><td>AutoCAD</td><td>Morning</td><td>Rahul Patil</td><td><span class="badge late">Late</span></td></tr>
+                <tr><td>28 Oct 2026</td><td>Python</td><td>Afternoon</td><td>Priya Deshmukh</td><td><span class="badge present">Present</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<footer class="footer">
+    © 2026 Institute LMS. Sample attendance records.
+    <br><br>
+    Attendance data must be connected to the institute database.
+</footer>
+
+</main>
+</div>
+
+<script>
+function toggleMenu(){
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("overlay").classList.toggle("show");
+}
+
+const attendanceData = {
+    10: {
+        days: 31,
+        present: [1,2,3,5,6,7,8,9,12,13,14,15,16,19,20,21,22,23,26,27,28,29,31],
+        absent: [4,10,17,24],
+        late: [11,25]
+    },
+    9: {
+        days: 30,
+        present: [1,2,3,4,7,8,9,10,11,14,15,16,17,18,21,22,23,24,25,28,29,30],
+        absent: [5,12,19,26],
+        late: [6,20]
+    },
+    8: {
+        days: 31,
+        present: [3,4,5,6,7,10,11,12,13,14,17,18,19,20,21,24,25,26,27,28,31],
+        absent: [1,8,15,22],
+        late: [29]
+    }
+};
+
+function renderCalendar(month){
+    const calendar = document.getElementById("calendar");
+    const year = 2026;
+    const data = attendanceData[month];
+    const firstDay = new Date(year, month, 1).getDay();
+
+    calendar.innerHTML = "";
+
+    ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(day => {
+        const element = document.createElement("div");
+        element.className = "day-name";
+        element.textContent = day;
+        calendar.appendChild(element);
+    });
+
+    for(let i = 0; i < firstDay; i++){
+        const blank = document.createElement("div");
+        calendar.appendChild(blank);
+    }
+
+    for(let day = 1; day <= data.days; day++){
+        const element = document.createElement("div");
+        element.className = "day";
+        element.textContent = day;
+
+        if(data.present.includes(day)) element.classList.add("present");
+        if(data.absent.includes(day)) element.classList.add("absent");
+        if(data.late.includes(day)) element.classList.add("late");
+
+        calendar.appendChild(element);
+    }
+}
+
+document.getElementById("monthSelect").addEventListener("change", function(){
+    renderCalendar(Number(this.value));
+});
+
+renderCalendar(10);
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["Student"]));</script>
+</body>
+</html>

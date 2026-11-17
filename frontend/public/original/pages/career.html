@@ -1,0 +1,611 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Career | Institute LMS</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        .career-hero {
+            background: #080808;
+            color: white;
+            padding: 90px 0;
+            text-align: center;
+        }
+
+        .career-hero span {
+            color: #999;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .career-hero h1 {
+            font-size: clamp(38px, 6vw, 60px);
+            letter-spacing: -3px;
+            margin-top: 15px;
+        }
+
+        .career-hero p {
+            color: #aaa;
+            font-size: 14px;
+            max-width: 600px;
+            margin: 15px auto 0;
+            line-height: 1.9;
+        }
+
+        .career-section {
+            padding: 85px 0;
+        }
+
+        .career-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .career-card {
+            border: 1px solid #e8e8e8;
+            border-radius: 16px;
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        .career-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+        }
+
+        .career-tag {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 30px;
+            background: #f2f2f2;
+            font-size: 9px;
+            font-weight: 800;
+            color: #555;
+        }
+
+        .career-card h3 {
+            font-size: 22px;
+            margin-top: 20px;
+        }
+
+        .career-card p {
+            font-size: 12px;
+            color: #777;
+            line-height: 1.8;
+            margin: 12px 0 20px;
+        }
+
+        .career-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            font-size: 10px;
+            color: #777;
+        }
+
+        .career-form-section {
+            background: #f7f7f7;
+            padding: 85px 0;
+        }
+
+        .career-form-wrapper {
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 18px;
+            padding: 40px;
+        }
+
+        .career-form-wrapper h2 {
+            font-size: 30px;
+            letter-spacing: -1px;
+        }
+
+        .career-form-wrapper > p {
+            color: #777;
+            font-size: 12px;
+            margin: 10px 0 30px;
+        }
+
+        .career-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 12px;
+            outline: none;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #111;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .career-form button {
+            grid-column: 1 / -1;
+            width: fit-content;
+        }
+
+        .form-message {
+            display: none;
+            grid-column: 1 / -1;
+            padding: 13px;
+            background: #f1f1f1;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        @media(max-width: 650px) {
+            .career-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .career-form {
+                grid-template-columns: 1fr;
+            }
+
+            .career-form-wrapper {
+                padding: 25px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/premium-public.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="container nav-content">
+
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">I</span>
+                <span>Institute<span class="logo-light">LMS</span></span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="../index.html">Home</a>
+                <a href="courses.html">Courses</a>
+                <a href="about.html">About Us</a>
+                <a href="career.html" class="active">Career</a>
+                <a href="social-media.html">Social Media</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <a href="login.html" class="btn btn-dark login-btn">
+                Login ↗
+            </a>
+
+        </div>
+    </header>
+
+
+    <!-- HERO -->
+    <section class="career-hero">
+
+        <div class="container">
+
+            <span>GROW WITH US</span>
+
+            <h1>Build Your Career</h1>
+
+            <p>
+                Join our educational team and contribute to a learning
+                environment focused on skills, innovation and student growth.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- JOB OPENINGS -->
+    <section class="career-section">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">OPPORTUNITIES</span>
+
+                    <h2>Explore Career Opportunities</h2>
+
+                    <p>
+                        Find a role that matches your skills and interests.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="career-grid">
+
+
+                <article class="career-card">
+
+                    <span class="career-tag">TRAINING</span>
+
+                    <h3>CAD Trainer</h3>
+
+                    <p>
+                        Teach AutoCAD, Creo, CATIA or other CAD software.
+                        Guide students through practical design exercises
+                        and course activities.
+                    </p>
+
+                    <div class="career-info">
+                        <span>Full-time / Part-time</span>
+                        <span>Technical Education</span>
+                    </div>
+
+                    <a href="#career-form" class="btn btn-dark apply-btn"
+                       data-role="CAD Trainer">
+                        Apply Now →
+                    </a>
+
+                </article>
+
+
+                <article class="career-card">
+
+                    <span class="career-tag">TRAINING</span>
+
+                    <h3>Computer Trainer</h3>
+
+                    <p>
+                        Teach computer applications, programming,
+                        web development and related technical subjects.
+                    </p>
+
+                    <div class="career-info">
+                        <span>Full-time / Part-time</span>
+                        <span>Computer Education</span>
+                    </div>
+
+                    <a href="#career-form" class="btn btn-dark apply-btn"
+                       data-role="Computer Trainer">
+                        Apply Now →
+                    </a>
+
+                </article>
+
+
+                <article class="career-card">
+
+                    <span class="career-tag">MANAGEMENT</span>
+
+                    <h3>Branch Manager</h3>
+
+                    <p>
+                        Coordinate branch operations, student admissions,
+                        staff activities and administrative responsibilities.
+                    </p>
+
+                    <div class="career-info">
+                        <span>Full-time</span>
+                        <span>Administration</span>
+                    </div>
+
+                    <a href="#career-form" class="btn btn-dark apply-btn"
+                       data-role="Branch Manager">
+                        Apply Now →
+                    </a>
+
+                </article>
+
+
+                <article class="career-card">
+
+                    <span class="career-tag">ADMINISTRATION</span>
+
+                    <h3>Admission Executive</h3>
+
+                    <p>
+                        Handle student enquiries, admission documentation,
+                        communication and admission records.
+                    </p>
+
+                    <div class="career-info">
+                        <span>Full-time</span>
+                        <span>Student Support</span>
+                    </div>
+
+                    <a href="#career-form" class="btn btn-dark apply-btn"
+                       data-role="Admission Executive">
+                        Apply Now →
+                    </a>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CAREER APPLICATION -->
+    <section class="career-form-section" id="career-form">
+
+        <div class="container">
+
+            <div class="career-form-wrapper">
+
+                <span class="section-label">JOIN OUR TEAM</span>
+
+                <h2>Submit Your Application</h2>
+
+                <p>
+                    Complete the form below to express your interest
+                    in joining our institute.
+                </p>
+
+
+                <form class="career-form" id="careerApplication">
+
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+
+                        <input
+                            type="text"
+                            id="fullName"
+                            name="full_name"
+                            placeholder="Enter your full name"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number *</label>
+
+                        <input
+                            type="tel"
+                            id="mobile"
+                            name="mobile"
+                            pattern="[0-9]{10}"
+                            maxlength="10"
+                            placeholder="10-digit mobile number"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="position">Applying For *</label>
+
+                        <select id="position" name="position" required>
+
+                            <option value="">Select Position</option>
+
+                            <option value="CAD Trainer">CAD Trainer</option>
+
+                            <option value="Computer Trainer">
+                                Computer Trainer
+                            </option>
+
+                            <option value="Branch Manager">
+                                Branch Manager
+                            </option>
+
+                            <option value="Admission Executive">
+                                Admission Executive
+                            </option>
+
+                            <option value="Other">Other</option>
+
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="qualification">Qualification *</label>
+
+                        <input
+                            type="text"
+                            id="qualification"
+                            name="qualification"
+                            placeholder="Your qualification"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="experience">Experience</label>
+
+                        <select id="experience" name="experience">
+
+                            <option value="">Select Experience</option>
+
+                            <option value="Fresher">Fresher</option>
+
+                            <option value="1-2 Years">1-2 Years</option>
+
+                            <option value="3-5 Years">3-5 Years</option>
+
+                            <option value="5+ Years">5+ Years</option>
+
+                        </select>
+                    </div>
+
+
+                    <div class="form-group full">
+                        <label for="resume">Resume Link (Optional)</label>
+
+                        <input
+                            type="url"
+                            id="resume"
+                            name="resume"
+                            placeholder="Paste your Google Drive resume link"
+                        >
+                    </div>
+
+
+                    <div class="form-group full">
+                        <label for="message">Additional Information</label>
+
+                        <textarea
+                            id="message"
+                            name="message"
+                            placeholder="Tell us about your skills and experience"
+                        ></textarea>
+                    </div>
+
+
+                    <div class="form-message" id="formMessage"></div>
+
+
+                    <button type="submit" class="btn btn-dark">
+                        Submit Application →
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="container footer-content">
+
+            <div>
+
+                <a href="../index.html" class="logo footer-logo">
+                    <span class="logo-icon">I</span>
+                    <span>Institute<span class="logo-light">LMS</span></span>
+                </a>
+
+                <p>
+                    Learn new skills. Build confidence.<br>
+                    Create your future.
+                </p>
+
+            </div>
+
+            <div class="footer-links">
+                <a href="../index.html">Home</a>
+                <a href="courses.html">Courses</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="login.html">Login</a>
+            </div>
+
+        </div>
+
+        <div class="container footer-bottom">
+            <p>© 2026 Institute LMS. All rights reserved.</p>
+            <p>Learn • Grow • Succeed</p>
+        </div>
+
+    </footer>
+
+
+    <!-- CAREER FORM SCRIPT -->
+    <script>
+
+        const careerForm = document.getElementById("careerApplication");
+        const positionSelect = document.getElementById("position");
+        const formMessage = document.getElementById("formMessage");
+
+        // Select role automatically when Apply Now is clicked
+        document.querySelectorAll(".apply-btn").forEach(button => {
+
+            button.addEventListener("click", () => {
+
+                positionSelect.value = button.dataset.role;
+
+            });
+
+        });
+
+
+        // Demo form submission
+        careerForm.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            if (!careerForm.checkValidity()) {
+                careerForm.reportValidity();
+                return;
+            }
+
+            formMessage.style.display = "block";
+
+            formMessage.textContent =
+                "Application form validated. Backend connection will be added later.";
+
+            careerForm.reset();
+
+        });
+
+    </script>
+
+    <script src="../assets/js/main.js"></script>
+
+</body>
+</html>

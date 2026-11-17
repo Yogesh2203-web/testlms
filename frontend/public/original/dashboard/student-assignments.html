@@ -1,0 +1,404 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Assignments | Institute LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:#f5f5f5;color:#171717}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:250px;background:#111;color:white;padding:25px 18px;position:fixed;height:100vh;overflow-y:auto;z-index:20}
+.brand{font-size:21px;font-weight:800;padding:5px 10px 30px}
+.brand span{color:#aaa}
+.nav-label{color:#777;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;padding:15px 10px 10px}
+.nav-link{display:block;padding:12px;margin-bottom:5px;border-radius:9px;text-decoration:none;color:#aaa;font-size:13px}
+.nav-link:hover,.nav-link.active{background:#292929;color:white}
+.main{margin-left:250px;width:calc(100% - 250px);padding:28px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}
+.topbar h1{font-size:25px;margin-bottom:5px}
+.topbar p{font-size:13px;color:#777}
+.profile{display:flex;align-items:center;gap:12px}
+.avatar{width:42px;height:42px;border-radius:50%;background:#111;color:white;display:grid;place-items:center;font-weight:700}
+.profile small{display:block;color:#888;margin-top:4px;font-size:11px}
+.menu-btn{display:none;background:#111;color:white;border:0;padding:10px 13px;border-radius:7px;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:23px}
+.stat{background:white;border:1px solid #eaeaea;border-radius:12px;padding:19px}
+.stat small{font-size:12px;color:#777}
+.stat h2{font-size:25px;margin-top:9px}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.search{flex:1;min-width:200px;padding:12px;border:1px solid #ddd;border-radius:9px;outline:none}
+.filter{padding:12px;border:1px solid #ddd;border-radius:9px;background:white;min-width:145px}
+.assignment-list{display:grid;gap:14px}
+.assignment{background:white;border:1px solid #eaeaea;border-radius:13px;padding:20px}
+.assignment-top{display:flex;justify-content:space-between;align-items:flex-start;gap:15px}
+.assignment h3{font-size:15px;margin-bottom:7px}
+.assignment .meta{font-size:11px;color:#888;line-height:1.8}
+.assignment .description{font-size:12px;color:#666;line-height:1.7;margin:13px 0}
+.status{font-size:10px;font-weight:700;padding:7px 10px;border-radius:20px;white-space:nowrap}
+.pending{background:#fff2d9;color:#946000}
+.submitted{background:#e5f5e9;color:#23733b}
+.overdue{background:#ffe7e7;color:#a22}
+.graded{background:#e9efff;color:#3454a1}
+.assignment-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid #eee;padding-top:13px}
+.marks{font-size:12px;color:#555}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid #111;border-radius:8px;padding:9px 13px;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none}
+.dark{background:#111;color:white}
+.light{background:white;color:#111}
+.empty{display:none;background:white;padding:35px;text-align:center;border-radius:12px;color:#777}
+.footer{text-align:center;color:#999;font-size:11px;padding:25px 0}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:50;align-items:center;justify-content:center;padding:15px}
+.modal.show{display:flex}
+.modal-box{background:white;width:100%;max-width:510px;border-radius:15px;padding:23px;max-height:90vh;overflow:auto}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-head h2{font-size:18px}
+.close{border:0;background:#eee;width:30px;height:30px;border-radius:50%;cursor:pointer}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:600;margin-bottom:7px}
+.form-group input,.form-group textarea{width:100%;padding:11px;border:1px solid #ddd;border-radius:8px;outline:none;font-size:12px}
+.form-group textarea{min-height:85px;resize:vertical}
+.form-note{font-size:11px;color:#888;line-height:1.6;margin-bottom:14px}
+.submit-btn{width:100%;padding:12px;border:0;border-radius:8px;background:#111;color:white;font-weight:700;cursor:pointer}
+.overlay{display:none}
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){
+.sidebar{transform:translateX(-100%);transition:.3s}
+.sidebar.open{transform:translateX(0)}
+.overlay.show{display:block;position:fixed;inset:0;background:#0008;z-index:10}
+.main{margin-left:0;width:100%;padding:20px}
+.menu-btn{display:block}
+.topbar{justify-content:flex-start;flex-wrap:wrap}
+.profile{margin-left:auto}
+}
+@media(max-width:550px){
+.main{padding:15px}
+.topbar h1{font-size:20px}
+.profile-info{display:none}
+.stats{gap:10px}
+.stat{padding:14px}
+.stat h2{font-size:21px}
+.assignment{padding:15px}
+.assignment-top{flex-direction:column}
+}
+</style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+    <div class="brand">INSTITUTE <span>LMS</span></div>
+    <div class="nav-label">Student Menu</div>
+    <a href="student.html" class="nav-link">▦ Dashboard</a>
+    <a href="student-courses.html" class="nav-link">▣ My Courses</a>
+    <a href="student-assignments.html" class="nav-link active">✎ Assignments</a>
+    <a href="student-exams.html" class="nav-link">▤ Exams</a>
+    <a href="student-results.html" class="nav-link">★ Results</a>
+    <a href="student-attendance.html" class="nav-link">◷ Attendance</a>
+    <a href="student-fees.html" class="nav-link">₹ Fees & Receipts</a>
+    <a href="student-learning.html" class="nav-link">▶ Learning Resources</a>
+    <div class="nav-label">Account</div>
+    <a href="student-profile.html" class="nav-link">♙ My Profile</a>
+    <a href="../pages/login.html" class="nav-link">↪ Logout</a>
+</aside>
+
+<main class="main">
+<header class="topbar">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <div>
+        <h1>My Assignments</h1>
+        <p>View deadlines and submit your coursework.</p>
+    </div>
+    <div class="profile">
+        <div class="avatar">ST</div>
+        <div class="profile-info">
+            <strong>Student Name</strong>
+            <small>Student ID: STU-2026-001</small>
+        </div>
+    </div>
+</header>
+
+<section class="stats">
+    <div class="stat">
+        <small>Total Assignments</small>
+        <h2 id="totalCount">05</h2>
+    </div>
+    <div class="stat">
+        <small>Pending</small>
+        <h2 id="pendingCount">02</h2>
+    </div>
+    <div class="stat">
+        <small>Submitted</small>
+        <h2 id="submittedCount">02</h2>
+    </div>
+    <div class="stat">
+        <small>Graded</small>
+        <h2 id="gradedCount">01</h2>
+    </div>
+</section>
+
+<div class="toolbar">
+    <input type="search" class="search" id="searchInput" placeholder="Search assignment or course...">
+    <select class="filter" id="statusFilter">
+        <option value="all">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="submitted">Submitted</option>
+        <option value="overdue">Overdue</option>
+        <option value="graded">Graded</option>
+    </select>
+</div>
+
+<section class="assignment-list" id="assignmentList">
+
+    <article class="assignment" data-title="autocad drawing practice" data-course="autocad" data-status="pending">
+        <div class="assignment-top">
+            <div>
+                <h3>AutoCAD Drawing Practice</h3>
+                <p class="meta">Course: AutoCAD Professional · Trainer: Rahul Patil</p>
+                <p class="meta">Assigned: 01 November 2026 · Due: 05 November 2026</p>
+            </div>
+            <span class="status pending">Pending</span>
+        </div>
+        <p class="description">Create a technical 2D drawing using the dimensions and instructions provided by your trainer.</p>
+        <div class="assignment-bottom">
+            <span class="marks">Maximum Marks: <strong>20</strong></span>
+            <div class="actions">
+                <button class="btn light" onclick="viewAssignment('AutoCAD Drawing Practice','Create a technical 2D drawing using the dimensions and instructions provided by your trainer.','05 November 2026','20')">View Details</button>
+                <button class="btn dark" onclick="openSubmit('AutoCAD Drawing Practice')">Submit Work</button>
+            </div>
+        </div>
+    </article>
+
+    <article class="assignment" data-title="python basic programs" data-course="python" data-status="pending">
+        <div class="assignment-top">
+            <div>
+                <h3>Python Basic Programs</h3>
+                <p class="meta">Course: Python Programming · Trainer: Priya Deshmukh</p>
+                <p class="meta">Assigned: 02 November 2026 · Due: 08 November 2026</p>
+            </div>
+            <span class="status pending">Pending</span>
+        </div>
+        <p class="description">Write and explain five basic Python programs covering variables, conditions, loops and functions.</p>
+        <div class="assignment-bottom">
+            <span class="marks">Maximum Marks: <strong>25</strong></span>
+            <div class="actions">
+                <button class="btn light" onclick="viewAssignment('Python Basic Programs','Write and explain five basic Python programs covering variables, conditions, loops and functions.','08 November 2026','25')">View Details</button>
+                <button class="btn dark" onclick="openSubmit('Python Basic Programs')">Submit Work</button>
+            </div>
+        </div>
+    </article>
+
+    <article class="assignment" data-title="creo 3d model" data-course="creo" data-status="submitted">
+        <div class="assignment-top">
+            <div>
+                <h3>Creo 3D Model</h3>
+                <p class="meta">Course: Creo 3D Design · Trainer: Amit Shinde</p>
+                <p class="meta">Submitted: 30 October 2026</p>
+            </div>
+            <span class="status submitted">Submitted</span>
+        </div>
+        <p class="description">Create a 3D model based on the sample object discussed during the training session.</p>
+        <div class="assignment-bottom">
+            <span class="marks">Maximum Marks: <strong>30</strong></span>
+            <span class="marks">Awaiting evaluation</span>
+        </div>
+    </article>
+
+    <article class="assignment" data-title="html css webpage" data-course="web development" data-status="graded">
+        <div class="assignment-top">
+            <div>
+                <h3>HTML & CSS Webpage</h3>
+                <p class="meta">Course: Web Development · Trainer: Neha Joshi</p>
+                <p class="meta">Submitted: 25 October 2026</p>
+            </div>
+            <span class="status graded">Graded</span>
+        </div>
+        <p class="description">Design a responsive webpage using HTML and CSS.</p>
+        <div class="assignment-bottom">
+            <span class="marks">Marks: <strong>18 / 20</strong></span>
+            <span class="marks">Feedback: Good work!</span>
+        </div>
+    </article>
+
+    <article class="assignment" data-title="autocad commands worksheet" data-course="autocad" data-status="overdue">
+        <div class="assignment-top">
+            <div>
+                <h3>AutoCAD Commands Worksheet</h3>
+                <p class="meta">Course: AutoCAD Professional · Trainer: Rahul Patil</p>
+                <p class="meta">Due: 28 October 2026</p>
+            </div>
+            <span class="status overdue">Overdue</span>
+        </div>
+        <p class="description">Complete the worksheet on basic drawing and editing commands.</p>
+        <div class="assignment-bottom">
+            <span class="marks">Maximum Marks: <strong>15</strong></span>
+            <span class="marks">Contact your trainer for submission instructions.</span>
+        </div>
+    </article>
+
+</section>
+
+<div class="empty" id="emptyState">
+    <h3>No assignments found</h3>
+    <p>Try changing your search or status filter.</p>
+</div>
+
+<footer class="footer">
+    © 2026 Institute LMS. Sample assignment records.
+    <br><br>
+    Submissions are demonstration-only until backend storage is connected.
+</footer>
+</main>
+</div>
+
+<!-- Assignment details modal -->
+<div class="modal" id="detailsModal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h2>Assignment Details</h2>
+            <button class="close" onclick="closeModal('detailsModal')">✕</button>
+        </div>
+        <h3 id="detailTitle" style="font-size:15px;margin-bottom:12px"></h3>
+        <p id="detailDescription" style="font-size:13px;line-height:1.7;color:#666;margin-bottom:15px"></p>
+        <p style="font-size:12px;margin-bottom:9px">Due Date: <strong id="detailDue"></strong></p>
+        <p style="font-size:12px">Maximum Marks: <strong id="detailMarks"></strong></p>
+    </div>
+</div>
+
+<!-- Submit assignment modal -->
+<div class="modal" id="submitModal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h2>Submit Assignment</h2>
+            <button class="close" onclick="closeModal('submitModal')">✕</button>
+        </div>
+
+        <form id="submitForm">
+            <div class="form-group">
+                <label>Assignment</label>
+                <input type="text" id="submitTitle" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Upload File</label>
+                <input type="file" id="assignmentFile" accept=".pdf,.doc,.docx,.zip,.jpg,.png" required>
+            </div>
+
+            <div class="form-group">
+                <label>Submission Note</label>
+                <textarea id="submissionNote" placeholder="Write a short note about your work..."></textarea>
+            </div>
+
+            <p class="form-note">
+                Demo only: selecting a file does not upload it to the institute.
+                Real file storage and submission timestamps require the backend.
+            </p>
+
+            <button class="submit-btn" type="submit">Submit Demo</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function toggleMenu(){
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("overlay").classList.toggle("show");
+}
+
+function openModal(id){
+    document.getElementById(id).classList.add("show");
+}
+
+function closeModal(id){
+    document.getElementById(id).classList.remove("show");
+}
+
+function viewAssignment(title, description, due, marks){
+    document.getElementById("detailTitle").textContent = title;
+    document.getElementById("detailDescription").textContent = description;
+    document.getElementById("detailDue").textContent = due;
+    document.getElementById("detailMarks").textContent = marks;
+    openModal("detailsModal");
+}
+
+function openSubmit(title){
+    document.getElementById("submitTitle").value = title;
+    document.getElementById("assignmentFile").value = "";
+    document.getElementById("submissionNote").value = "";
+    openModal("submitModal");
+}
+
+document.getElementById("submitForm").addEventListener("submit", function(event){
+    event.preventDefault();
+
+    const file = document.getElementById("assignmentFile").files[0];
+
+    if(!file){
+        alert("Please select your assignment file.");
+        return;
+    }
+
+    alert(
+        "Demo submission received!\n\n" +
+        "Assignment: " + document.getElementById("submitTitle").value +
+        "\nSelected file: " + file.name +
+        "\n\nThis has not been uploaded or saved."
+    );
+
+    closeModal("submitModal");
+});
+
+const searchInput = document.getElementById("searchInput");
+const statusFilter = document.getElementById("statusFilter");
+const assignments = [...document.querySelectorAll(".assignment")];
+
+function filterAssignments(){
+    const query = searchInput.value.toLowerCase().trim();
+    const status = statusFilter.value;
+    let visible = 0;
+
+    assignments.forEach(item => {
+        const searchable = item.dataset.title + " " + item.dataset.course;
+        const matchesText = searchable.includes(query);
+        const matchesStatus = status === "all" || item.dataset.status === status;
+        const show = matchesText && matchesStatus;
+
+        item.style.display = show ? "" : "none";
+        if(show) visible++;
+    });
+
+    document.getElementById("emptyState").style.display =
+        visible === 0 ? "block" : "none";
+}
+
+searchInput.addEventListener("input", filterAssignments);
+statusFilter.addEventListener("change", filterAssignments);
+
+document.getElementById("totalCount").textContent = assignments.length;
+document.getElementById("pendingCount").textContent =
+    assignments.filter(a => a.dataset.status === "pending" || a.dataset.status === "overdue").length;
+document.getElementById("submittedCount").textContent =
+    assignments.filter(a => a.dataset.status === "submitted").length;
+document.getElementById("gradedCount").textContent =
+    assignments.filter(a => a.dataset.status === "graded").length;
+
+document.querySelectorAll(".modal").forEach(modal => {
+    modal.addEventListener("click", event => {
+        if(event.target === modal) modal.classList.remove("show");
+    });
+});
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["Student"]));</script>
+</body>
+</html>

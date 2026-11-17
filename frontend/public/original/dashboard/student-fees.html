@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/lms-config.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Fees | Institute LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:#f5f5f5;color:#171717}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:250px;background:#111;color:white;padding:25px 18px;position:fixed;height:100vh;overflow-y:auto;z-index:20}
+.brand{font-size:21px;font-weight:800;padding:5px 10px 30px}
+.brand span{color:#aaa}
+.nav-label{color:#777;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;padding:15px 10px 10px}
+.nav-link{display:block;padding:12px;margin-bottom:5px;border-radius:9px;text-decoration:none;color:#aaa;font-size:13px}
+.nav-link:hover,.nav-link.active{background:#292929;color:white}
+.main{margin-left:250px;width:calc(100% - 250px);padding:28px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}
+.topbar h1{font-size:25px;margin-bottom:5px}
+.topbar p{font-size:13px;color:#777}
+.profile{display:flex;align-items:center;gap:12px}
+.avatar{width:42px;height:42px;border-radius:50%;background:#111;color:white;display:grid;place-items:center;font-weight:700}
+.profile small{display:block;color:#888;margin-top:4px;font-size:11px}
+.menu-btn{display:none;background:#111;color:white;border:0;padding:10px 13px;border-radius:7px;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
+.stat{background:white;border:1px solid #eaeaea;border-radius:12px;padding:19px}
+.stat small{font-size:12px;color:#777}
+.stat h2{font-size:25px;margin-top:9px}
+.grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;margin-bottom:20px}
+.panel{background:white;border:1px solid #eaeaea;border-radius:13px;padding:20px;margin-bottom:20px;min-width:0}
+.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:17px}
+.panel-heading h2{font-size:16px}
+.fee-card{background:#111;color:white;border-radius:13px;padding:23px}
+.fee-card small{font-size:11px;color:#aaa}
+.fee-card h2{font-size:30px;margin:10px 0}
+.fee-card p{font-size:12px;color:#bbb}
+.fee-progress{height:8px;background:#393939;border-radius:20px;overflow:hidden;margin:17px 0 9px}
+.fee-progress span{height:100%;display:block;background:white;border-radius:20px}
+.fee-labels{display:flex;justify-content:space-between;font-size:10px;color:#bbb}
+.fee-row{display:flex;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid #eee;font-size:12px}
+.fee-row:last-child{border-bottom:none}
+.fee-row strong{font-size:13px}
+.notice{background:#fff;border:1px solid #eaeaea;border-left:4px solid #111;border-radius:10px;padding:15px;margin-bottom:20px}
+.notice h3{font-size:13px;margin-bottom:6px}
+.notice p{font-size:11px;color:#777;line-height:1.7}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{text-align:left;padding:13px 12px;border-bottom:1px solid #eee;font-size:12px}
+th{font-size:11px;color:#777;background:#fafafa}
+.badge{padding:6px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.paid{background:#e5f5e9;color:#23733b}
+.pending{background:#fff2d9;color:#946000}
+.btn{border:1px solid #111;border-radius:8px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer}
+.dark{background:#111;color:white}
+.light{background:white;color:#111}
+.footer{text-align:center;color:#999;font-size:11px;padding:25px 0}
+.overlay{display:none}
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+@media(max-width:800px){
+.sidebar{transform:translateX(-100%);transition:.3s}
+.sidebar.open{transform:translateX(0)}
+.overlay.show{display:block;position:fixed;inset:0;background:#0008;z-index:10}
+.main{margin-left:0;width:100%;padding:20px}
+.menu-btn{display:block}
+.topbar{justify-content:flex-start;flex-wrap:wrap}
+.profile{margin-left:auto}
+}
+@media(max-width:550px){
+.main{padding:15px}
+.topbar h1{font-size:20px}
+.profile-info{display:none}
+.stats{gap:10px}
+.stat{padding:14px}
+.stat h2{font-size:21px}
+.panel{padding:14px}
+}
+@media print{
+.sidebar,.menu-btn,.footer,.no-print{display:none!important}
+.main{margin:0;width:100%;padding:0}
+body{background:white}
+}
+</style>
+    <link rel="stylesheet" href="../assets/css/premium-dashboard.css">
+</head>
+
+<body>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+    <div class="brand">INSTITUTE <span>LMS</span></div>
+    <div class="nav-label">Student Menu</div>
+    <a href="student.html" class="nav-link">▦ Dashboard</a>
+    <a href="student-courses.html" class="nav-link">▣ My Courses</a>
+    <a href="student-assignments.html" class="nav-link">✎ Assignments</a>
+    <a href="student-exams.html" class="nav-link">▤ Exams</a>
+    <a href="student-results.html" class="nav-link">★ Results</a>
+    <a href="student-attendance.html" class="nav-link">◷ Attendance</a>
+    <a href="student-fees.html" class="nav-link active">₹ Fees & Receipts</a>
+    <a href="student-learning.html" class="nav-link">▶ Learning Resources</a>
+    <div class="nav-label">Account</div>
+    <a href="student-profile.html" class="nav-link">♙ My Profile</a>
+    <a href="../pages/login.html" class="nav-link">↪ Logout</a>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <div>
+        <h1>My Fees & Receipts</h1>
+        <p>View your course fees and payment records.</p>
+    </div>
+    <div class="profile">
+        <div class="avatar">ST</div>
+        <div class="profile-info">
+            <strong>Student Name</strong>
+            <small>Student ID: STU-2026-001</small>
+        </div>
+    </div>
+</header>
+
+<section class="stats">
+    <div class="stat"><small>Total Course Fees</small><h2>₹15,000</h2></div>
+    <div class="stat"><small>Total Paid</small><h2>₹10,000</h2></div>
+    <div class="stat"><small>Pending Balance</small><h2>₹5,000</h2></div>
+    <div class="stat"><small>Transactions</small><h2>02</h2></div>
+</section>
+
+<section class="notice">
+    <h3>Payment Information</h3>
+    <p>Check your pending fees and payment records. Contact your institute branch if a payment is missing or incorrectly displayed. Only verified payments should be treated as paid.</p>
+</section>
+
+<div class="grid">
+
+<section class="fee-card">
+    <small>OUTSTANDING BALANCE</small>
+    <h2>₹5,000</h2>
+    <p>AutoCAD Professional · Student ID: STU-2026-001</p>
+
+    <div class="fee-progress">
+        <span style="width:66.67%"></span>
+    </div>
+
+    <div class="fee-labels">
+        <span>Paid: ₹10,000</span>
+        <span>Total: ₹15,000</span>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-heading">
+        <h2>Fee Breakdown</h2>
+    </div>
+
+    <div class="fee-row">
+        <span>Course Fees</span>
+        <strong>₹15,000</strong>
+    </div>
+    <div class="fee-row">
+        <span>Additional Charges</span>
+        <strong>₹0</strong>
+    </div>
+    <div class="fee-row">
+        <span>Discount</span>
+        <strong>₹0</strong>
+    </div>
+    <div class="fee-row">
+        <span>Paid Amount</span>
+        <strong>₹10,000</strong>
+    </div>
+    <div class="fee-row">
+        <span>Remaining Balance</span>
+        <strong>₹5,000</strong>
+    </div>
+</section>
+
+</div>
+
+<section class="panel">
+    <div class="panel-heading">
+        <h2>Payment History</h2>
+        <button class="btn light no-print" onclick="exportPayments()">Export CSV</button>
+    </div>
+
+    <div class="table-wrap">
+        <table id="paymentTable">
+            <thead>
+                <tr>
+                    <th>Receipt No.</th>
+                    <th>Date</th>
+                    <th>Course</th>
+                    <th>Payment Mode</th>
+                    <th>Reference</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th class="no-print">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>FEE-2026-001</td>
+                    <td>05 Oct 2026</td>
+                    <td>AutoCAD</td>
+                    <td>UPI</td>
+                    <td>DEMO-UPI-001</td>
+                    <td>₹5,000</td>
+                    <td><span class="badge paid">Verified</span></td>
+                    <td class="no-print"><button class="btn dark" onclick="printReceipt(0)">Receipt</button></td>
+                </tr>
+                <tr>
+                    <td>FEE-2026-002</td>
+                    <td>20 Oct 2026</td>
+                    <td>AutoCAD</td>
+                    <td>Cash</td>
+                    <td>DEMO-CASH-002</td>
+                    <td>₹5,000</td>
+                    <td><span class="badge paid">Verified</span></td>
+                    <td class="no-print"><button class="btn dark" onclick="printReceipt(1)">Receipt</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<footer class="footer">
+    © 2026 Institute LMS. Sample payment information.
+    <br><br>
+    Demo receipts are not proof of actual payment. Verified receipts must be generated by the institute backend.
+</footer>
+
+</main>
+</div>
+
+<script>
+function toggleMenu(){
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("overlay").classList.toggle("show");
+}
+
+const payments = [
+    {
+        receipt:"FEE-2026-001",
+        date:"05 October 2026",
+        student:"Student Name",
+        studentId:"STU-2026-001",
+        branch:"Main Branch",
+        course:"AutoCAD Professional",
+        mode:"UPI",
+        reference:"DEMO-UPI-001",
+        amount:5000,
+        status:"Verified"
+    },
+    {
+        receipt:"FEE-2026-002",
+        date:"20 October 2026",
+        student:"Student Name",
+        studentId:"STU-2026-001",
+        branch:"Main Branch",
+        course:"AutoCAD Professional",
+        mode:"Cash",
+        reference:"DEMO-CASH-002",
+        amount:5000,
+        status:"Verified"
+    }
+];
+
+function printReceipt(index){
+    const p = payments[index];
+    const receiptWindow = window.open("", "_blank", "width=750,height=750");
+
+    if(!receiptWindow){
+        alert("Please allow pop-ups to print the receipt.");
+        return;
+    }
+
+    const safe = value => String(value).replace(/[&<>"']/g, char => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    })[char]);
+
+    receiptWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Fee Receipt</title>
+            <style>
+                body{font-family:Arial,sans-serif;padding:35px;color:#111}
+                .receipt{max-width:650px;margin:auto;border:1px solid #ddd;padding:30px}
+                h1{text-align:center;font-size:23px}
+                .subtitle{text-align:center;color:#777;font-size:12px}
+                hr{border:0;border-top:1px solid #ddd;margin:20px 0}
+                .row{display:flex;justify-content:space-between;gap:15px;padding:11px 0;border-bottom:1px solid #eee;font-size:13px}
+                .amount{font-size:23px;font-weight:bold;text-align:right;margin-top:20px}
+                .notice{text-align:center;color:#a22;font-size:11px;margin-top:25px}
+                button{padding:11px 20px;background:#111;color:white;border:0;margin-top:20px;cursor:pointer}
+                @media print{button{display:none}}
+            </style>
+</head>
+        <body>
+            <div class="receipt">
+                <h1>INSTITUTE LMS</h1>
+                <p class="subtitle">STUDENT FEE RECEIPT · SAMPLE</p>
+                <hr>
+                <div class="row"><span>Receipt Number</span><strong>${safe(p.receipt)}</strong></div>
+                <div class="row"><span>Student Name</span><strong>${safe(p.student)}</strong></div>
+                <div class="row"><span>Student ID</span><strong>${safe(p.studentId)}</strong></div>
+                <div class="row"><span>Branch</span><strong>${safe(p.branch)}</strong></div>
+                <div class="row"><span>Course</span><strong>${safe(p.course)}</strong></div>
+                <div class="row"><span>Payment Date</span><strong>${safe(p.date)}</strong></div>
+                <div class="row"><span>Payment Mode</span><strong>${safe(p.mode)}</strong></div>
+                <div class="row"><span>Reference</span><strong>${safe(p.reference)}</strong></div>
+                <div class="row"><span>Payment Status</span><strong>${safe(p.status)}</strong></div>
+                <div class="amount">Amount Received: ₹${Number(p.amount).toLocaleString("en-IN")}</div>
+                <p class="notice">SAMPLE RECEIPT — NOT VALID AS PROOF OF PAYMENT</p>
+                <button onclick="window.print()">Print / Save PDF</button>
+            </div>
+        </body>
+        </html>
+    `);
+
+    receiptWindow.document.close();
+}
+
+function exportPayments(){
+    const rows = [
+        ["Receipt No","Date","Course","Payment Mode","Reference","Amount","Status"],
+        ...payments.map(p => [
+            p.receipt,p.date,p.course,p.mode,p.reference,p.amount,p.status
+        ])
+    ];
+
+    const csv = rows.map(row =>
+        row.map(value => '"' + String(value).replace(/"/g,'""') + '"').join(",")
+    ).join("\n");
+
+    const blob = new Blob([csv],{type:"text/csv;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "student-payment-history.csv";
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
+</script>
+<script src="../assets/js/api.js"></script>
+
+<!-- LMS_ROLE_GUARD -->
+<script src="/original/assets/js/auth-guard.js"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>AuthGuard.protect(["Student"]));</script>
+</body>
+</html>
